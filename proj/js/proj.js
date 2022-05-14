@@ -6,13 +6,23 @@ var geometry, material, mesh;
 
 var ball;
 
-function addTableLeg(obj, x, y, z) {
+function createCube(x, y, z, width, height, depth) {
     'use strict';
 
-    geometry = new THREE.CubeGeometry(2, 6, 2);
+    var cube = new THREE.Object3D();
+    
+    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+
+    geometry = new THREE.CubeGeometry(width, height, depth);
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y - 3, z);
-    obj.add(mesh);
+    mesh.position.set(x, y, z);
+    cube.add(mesh);
+
+    scene.add(cube);
+    
+    cube.position.x = x;
+    cube.position.y = y;
+    cube.position.z = z;
 }
 
 function addTableTop(obj, x, y, z) {
@@ -60,6 +70,57 @@ function createTable(x, y, z) {
     table.position.z = z;
 }
 
+function createTorus(x, y, z) {
+    'use strict';
+    
+    var torus = new THREE.Object3D();
+    
+    material = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+
+    const radius = 3;  // ui: radius
+    const tubeRadius = 1.5;  // ui: tubeRadius
+    const radialSegments = 8;  // ui: radialSegments
+    const tubularSegments = 24;  // ui: tubularSegments
+   
+    geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    torus.add(mesh);
+    
+    scene.add(torus);
+    
+    torus.position.x = x;
+    torus.position.y = y;
+    torus.position.z = z;
+}
+
+function createCylinder(x, y, z, len, rot) {
+    'use strict';
+    
+    var cylinder = new THREE.Object3D();
+    
+    material = new THREE.MeshBasicMaterial({ color: 0xf0f8ff, wireframe: true });
+
+    const radiusTop = 1;  // ui: radiusTop
+    const radiusBottom = 1;  // ui: radiusBottom
+    const height = len;  // ui: height
+    const radialSegments = 8;  // ui: radialSegments
+
+    const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
+   
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    mesh.rotation.x = rot;
+    cylinder.add(mesh);
+    
+    scene.add(cylinder);
+    
+    cylinder.position.x = x;
+    cylinder.position.y = y;
+    cylinder.position.z = z;
+
+}
+
 function createScene() {
     'use strict';
     
@@ -68,8 +129,11 @@ function createScene() {
 
     scene.add(new THREE.AxisHelper(10));
     
-    createTable(0, 8, 0);
-    createBall(0, 0, 15);
+    createTorus(0, 0, 5);
+    createCylinder(0, 0, 0, 20, Math.PI / 2);
+    createCube(0,0,-6.3,20,5,5);
+    createCylinder(0, 7.5, -6.3, 25, 0);
+    createCube(0,15,-6.3,5,5,5);
 }
 
 function createCamera() {
@@ -128,18 +192,6 @@ function onKeyDown(e) {
             }
         });
         break;
-    case 83:  //S
-    case 115: //s
-        ball.userData.jumping = !ball.userData.jumping;
-        break;
-    case 69:  //E
-    case 101: //e
-        scene.traverse(function (node) {
-            if (node instanceof THREE.AxisHelper) {
-                node.visible = !node.visible;
-            }
-        });
-        break;
     }
 }
 
@@ -174,11 +226,6 @@ function init() {
 function animate() {
     'use strict';
     
-    if (ball.userData.jumping) {
-        ball.userData.step += 0.04;
-        ball.position.y = Math.abs(30 * (Math.sin(ball.userData.step)));
-        ball.position.z = 15 * (Math.cos(ball.userData.step));
-    }
     render();
     
     requestAnimationFrame(animate);
