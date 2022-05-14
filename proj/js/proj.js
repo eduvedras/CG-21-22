@@ -1,11 +1,9 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var LateralCamera, FrontalCamera, TopCamera, cameraInUse, scene, renderer;
-var g0, g1, g2, g3, g4, g5, g6, g7;
+var g0, g1, g2, g3, g4, g5, g6, g7, gf;
 
 var geometry, material, mesh;
-
-var ball;
 
 function createCube(x, y, z, width, height, depth, g) {
     'use strict';
@@ -50,7 +48,7 @@ function createTorus(x, y, z, g) {
     g.add(torus);
 }
 
-function createCylinder(x, y, z, len, rot, g) {
+function createCylinder(x, y, z, len, rotx, roty, rotz, g) {
     'use strict';
     
     var cylinder = new THREE.Object3D();
@@ -69,7 +67,9 @@ function createCylinder(x, y, z, len, rot, g) {
     mesh.rotation.x = rot;*/
     cylinder.add(mesh);
 
-    cylinder.rotation.x = rot;
+    cylinder.rotation.x = rotx;
+    cylinder.rotation.y = roty;
+    cylinder.rotation.z = rotz;
     
     cylinder.position.x = x;
     cylinder.position.y = y;
@@ -77,6 +77,28 @@ function createCylinder(x, y, z, len, rot, g) {
 
     g.add(cylinder);
 
+}
+
+function createSphere(x, y, z, r, g) {
+    'use strict';
+    
+    var sphere = new THREE.Object3D();
+    sphere.userData = { jumping: true, step: 0 };
+
+    const radius = r;  // ui: radius
+    const widthSegments = 12;  // ui: widthSegments
+    const heightSegments = 8;  // ui: heightSegments
+    
+    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+    mesh = new THREE.Mesh(geometry, material);
+    
+    sphere.add(mesh);
+    sphere.position.set(x, y, z);
+    
+    scene.add(sphere);
+
+    g.add(sphere);
 }
 
 function createScene() {
@@ -96,37 +118,49 @@ function createScene() {
     /*g6 = new THREE.Object3D();
     g7 = new THREE.Object3D();
     g8 = new THREE.Object3D();*/
+    gf = new THREE.Object3D();
     
     createTorus(0, 0, 10, g0);
-    createCylinder(0, 0, 0, 20, Math.PI/2, g0);
+    createCylinder(0, 0, 0, 20, Math.PI/2, 0, 0, g0);
     g0.position.set(0,0,12.5);
     
     g1.add(g0);
     createCube(0,0,0,20,5,5,g1);
-    createCylinder(0, 0, -7.5, 10, Math.PI / 2, g1);
+    createCylinder(0, 0, -7.5, 10, Math.PI/2, 0, 0, g1);
     createCube(0,0,-15,5,5,5,g1);
     g1.position.set(0,-2.5,0);
 
     g2.add(g1);
-    createCylinder(0, 12.5, 0, 25, 0, g2);
-    g2.rotation.y= -Math.PI/4;
+    createCylinder(0, 12.5, 0, 25, 0, 0, 0, g2);
+    g2.rotation.y= Math.PI/4;
     g2.position.set(0,-27.5,0);
 
     g3.add(g2);
     createCube(0,0,0,5,5,5, g3);
-    createCylinder(0,0,-12.5,20, Math.PI / 2, g3);
+    createCylinder(0,0,-12.5,20, Math.PI / 2, 0, 0, g3);
     g3.position.set(0,0,27.5);
 
     g4.add(g3);
     createCube(0,0,0,20,10,10,g4);
-    createCylinder(0,20,0,30, 0,g4);
+    createCylinder(0,20,0,30, 0, 0, 0, g4);
     //g4.rotation.y possivel
     g4.position.set(0,-40,0);
 
     g5.add(g4)
     createCube(0,0,0,10,10,10,g5);
-    g5.position.set(0,30,0);//temp
-    scene.add(g5);
+    createCylinder(-12.5, 0, 0, 15, 0, 0, Math.PI/2, g5);
+    createCube(-22.5, 0, 0, 5, 5, 5, g5);
+    //createCylinder(0,15,0,20,0,0,0,g5);
+    createCylinder(2.5,13,-6,20,0,Math.PI/3,-Math.PI/4,g5);//y=15
+    //g5.position.set(-3,-13.66,7.06);
+    g5.position.set(-8,-24,15);
+    //g5.position.set(0,-15,0);
+    //g5.rotation.y= Math.PI/4; rotacao se necessaria
+    //g5.position.set(0, -30, 0);
+
+    gf.add(g5);
+    createSphere(0,0,0,5,gf);
+    scene.add(gf);
 }
 
 function createCamera() {
