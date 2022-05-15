@@ -193,7 +193,6 @@ function createScene() {
     createCube(0,0,0,10,10,10,g5);
     createCylinder(-12.5, 0, 0, 15, 0, 0, Math.PI/2, g5);
     createCube(-22.5, 0, 0, 5, 5, 5, g5);
-    //g5.rotation.y= Math.PI/4;
     g5.position.set(-8,-24,15);
     
     g6.add(g5)
@@ -207,14 +206,12 @@ function createScene() {
     createTorusKnot(18,8,0,g7);
     createCylinder(-8.5,2,0,10,0,0,Math.PI/3,g7);
     createTorusKnot(-18,8,0,g7);
-    //rotacao possivel
     g7.position.set(0,-5,0);
 
     g8.add(g7);
     createCylinder(5,4.5,-8,20,-Math.PI/4,0,-Math.PI/8,g8);
     createCone(8,17,-14,0,0,0,7,10,g8);
     g8.position.set(-8,-17,14);
-    //rot
 
     g9.add(g8);
     createCylinder(-7.5,3,0,10,0,0,Math.PI/4,g9);
@@ -304,44 +301,27 @@ function onKeyDown(e) {
         break;
     case 81: //Q
     case 113://q
-        //gf.rotateY(0.1);
         v1R=1;
-        //setTimeout(function(){v1R = 0},1000);
-        
         break;
     case 87: //W
     case 119://w
-        //gf.rotateY(-0.1); 
         v1L=1;
-        //setTimeout(function(){v1L = 0},1000);
         break;
     case 65: //A
     case 97://a
-        //g12.rotateX(0.1); 
         v2R=1;
-        //setTimeout(function(){v2R = 0},1000);
-        
         break;
     case 83: //S
     case 115://s
-        //g12.rotateX(-0.1); 
         v2L=1;
-        //setTimeout(function(){v2L = 0},1000);
-        
         break;
     case 90: //Z
     case 122://z
-        //g4.rotateY(0.1); 
         v3R=1;
-        //setTimeout(function(){v3R = 0},1000);
-        
         break;
     case 88: //X
     case 120://x
-        //g4.rotateY(-0.1);
         v3L=1;
-        //setTimeout(function(){v3L = 0},1000);
-        
         break;
     case 37: //left arrow
         left = 1;
@@ -372,43 +352,27 @@ function onKeyUp(e) {
     switch (e.keyCode) {
     case 81: //Q
     case 113://q
-        //gf.rotateY(0.1);
         v1R=0;
-        //setTimeout(function(){v1R = 0},1000);
-        
         break;
     case 87: //W
     case 119://w
-        //gf.rotateY(-0.1); 
         v1L=0;
-        //setTimeout(function(){v1L = 0},1000);
         break;
     case 65: //A
     case 97://a
-        //g12.rotateX(0.1); 
         v2R=0;
-        //setTimeout(function(){v2R = 0},1000);
-        
         break;
     case 83: //S
     case 115://s
-        //g12.rotateX(-0.1); 
         v2L=0;
-        //setTimeout(function(){v2L = 0},1000);
-        
         break;
     case 90: //Z
     case 122://z
-        //g4.rotateY(0.1); 
         v3R=0;
-        //setTimeout(function(){v3R = 0},1000);
-        
         break;
     case 88: //X
     case 120://x
-        //g4.rotateY(-0.1);
         v3L=0;
-        //setTimeout(function(){v3L = 0},1000);
         break;
     case 37: //left arrow
         left = 0;
@@ -440,33 +404,21 @@ function movement(deltaTime){
     const vel = deltaTime * 8;
     if(v1R == 1){
         gf.rotateY(angle);
-        //v1R = 0;
-        //setTimeout(function(){v1R = 0},1000);
     }
     if(v1L == 1){
         gf.rotateY(-angle);
-        //v1L = 0;
-        //setTimeout(function(){v1L = 0},1000);
     }
     if(v2R == 1){
         g12.rotateX(angle);
-        //v2R = 0;
-        //setTimeout(function(){v2R = 0},1000);
     }
     if(v2L == 1){
         g12.rotateX(-angle);
-        //v2L = 0;
-        //setTimeout(function(){v2L = 0},1000);
     }
     if(v3R == 1){
         g4.rotateY(angle);
-        //v3R = 0;
-        //setTimeout(function(){v3R = 0},1000);
     }
     if(v3L == 1){
         g4.rotateY(-angle);
-        //v3L = 0;
-        //setTimeout(function(){v3L = 0},1000);
     }
     if(left == 1){
         gf.translateX(-vel);
