@@ -1,11 +1,16 @@
 /*global THREE, requestAnimationFrame, console*/
 
-var LateralCamera, FrontalCamera, TopCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down, scene, renderer, clock;
-var resetX, resetY, initX, initY;
-var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12, gf;
+var LateralCamera, FrontalCamera, TopCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
+var dz,cz;
+var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27, gf;
 
 var geometry, material, mesh;
-
+/**
+ * disposição dos objetos -> não tem de estar ligados obrigatório hierarquia
+ * grafo de cena -> só é obrigatório apresentar 3 objetos (aconselha se fazer para os mais dificeis)
+ * movimentar -> d e c para mexer no eixo z
+ * submeter no moodle
+ */
 function createCube(x, y, z, width, height, depth, g) {
     'use strict';
 
@@ -162,82 +167,122 @@ function createScene() {
     g10 = new THREE.Object3D();
     g11 = new THREE.Object3D();
     g12 = new THREE.Object3D();
+    g13 = new THREE.Object3D();
+    g14 = new THREE.Object3D();
+    g15 = new THREE.Object3D();
+    g16 = new THREE.Object3D();
+    g17 = new THREE.Object3D();
+    g18 = new THREE.Object3D();
+    g19 = new THREE.Object3D();
+    g20 = new THREE.Object3D();
+    g21 = new THREE.Object3D();
+    g22 = new THREE.Object3D();
+    g23 = new THREE.Object3D();
+    g24 = new THREE.Object3D();
+    g25 = new THREE.Object3D();
+    g26 = new THREE.Object3D();
+    g27 = new THREE.Object3D();
     gf = new THREE.Object3D();
     
+    
     createTorus(0, 0, 10, 0, 0, 0, g0);
-    createCylinder(0, 0, 0, 20, Math.PI/2, 0, 0, g0);
-    g0.position.set(0,0,12.5);
-    
     g1.add(g0);
-    createCube(0,0,0,20,5,5,g1);
-    createCylinder(0, 0, -7.5, 10, Math.PI/2, 0, 0, g1);
-    createCube(0,0,-15,5,5,5,g1);
-    g1.position.set(0,-2.5,0);
-
-    g2.add(g1);
-    createCylinder(0, 12.5, 0, 25, 0, 0, 0, g2);
-    g2.rotation.y= Math.PI/4;
-    g2.position.set(0,-27.5,0);
-
-    g3.add(g2);
-    createCube(0,0,0,5,5,5, g3);
-    createCylinder(0,0,-12.5,20, Math.PI / 2, 0, 0, g3);
-    g3.position.set(0,0,27.5);
-
-    g4.add(g3);
-    createCube(0,0,0,20,10,10,g4);
-    createCylinder(0,20,0,30, 0, 0, 0, g4);
-    g4.position.set(0,-40,0);
-
-    g5.add(g4)
-    createCube(0,0,0,10,10,10,g5);
-    createCylinder(-12.5, 0, 0, 15, 0, 0, Math.PI/2, g5);
-    createCube(-22.5, 0, 0, 5, 5, 5, g5);
-    g5.position.set(-8,-24,15);
+    createCylinder(0, 0, 0, 20, Math.PI/2, 0, 0, g1);
+    g1.position.set(0,0,12.5);
     
-    g6.add(g5)
-    createCylinder(-5.5,-11,9,20,0,Math.PI/3,-Math.PI/4,g6);//y=15
+    g2.add(g1);
+    createCube(0,0,0,20,5,5,g2);
+    g3.add(g2);
+    createCylinder(0, 0, -7.5, 10, Math.PI/2, 0, 0, g3);
+    g4.add(g3);
+    createCube(0,0,-15,5,5,5,g4);
+    g4.position.set(0,-2.5,0);
+    
+    g5.add(g4);
+    createCylinder(0, 12.5, 0, 25, 0, 0, 0, g5);
+    g5.rotation.y= Math.PI/4;
+    g5.position.set(0,-27.5,0);
 
-    gf.add(g6);
-    createSphere(0,0,0,5,gf);
-
-    createCone(0,0,0,0,0,0,7,10,g7);
-    createCylinder(8.5,2,0,10,0,0,-Math.PI/3,g7);
-    createTorusKnot(18,8,0,g7);
-    createCylinder(-8.5,2,0,10,0,0,Math.PI/3,g7);
-    createTorusKnot(-18,8,0,g7);
-    g7.position.set(0,-5,0);
+    g6.add(g5);
+    createCube(0,0,0,5,5,5, g6);
+    g7.add(g6);
+    createCylinder(0,0,-12.5,20, Math.PI / 2, 0, 0, g7);
+    g7.position.set(0,0,27.5);
 
     g8.add(g7);
-    createCylinder(5,4.5,-8,20,-Math.PI/4,0,-Math.PI/8,g8);
-    createCone(8,17,-14,0,0,0,7,10,g8);
-    g8.position.set(-8,-17,14);
-
+    createCube(0,0,0,20,10,10,g8);
     g9.add(g8);
-    createCylinder(-7.5,3,0,10,0,0,Math.PI/4,g9);
-    createTorus(-15,8,0, Math.PI/4, 0, 0,g9);
-    g9.position.set(15,-8,0);
+    createCylinder(0,20,0,30, 0, 0, 0, g9);
+    g9.position.set(0,-40,0);
+
 
     g10.add(g9);
-    createCylinder(0,3,-3,10,-Math.PI/4,0,0,g10);
-    createCone(0,10,-10,-Math.PI/4,0,0,7,10,g10);
-    g10.position.set(0,-10,10);
-
+    createCube(0,0,0,10,10,10,g10);
     g11.add(g10);
-    createCylinder(10,6,-5,20,-Math.PI/4,0, -Math.PI/4,g11);
-    createSphere(20.5,13,-13.5,5,g11);
-    g11.position.set(7,3,-4);
-
+    createCylinder(-12.5, 0, 0, 15, 0, 0, Math.PI/2, g11);
     g12.add(g11);
-    createCylinder(-10,0,0,20,0,0, -Math.PI/2,g12);
-    g12.position.set(25,0,0);
-    g12.rotation.x= Math.PI/3;
+    createCube(-22.5, 0, 0, 5, 5, 5, g12);
+    g12.position.set(-8,-24,15);
+    
+    g13.add(g12);
+    createCylinder(-5.5,-11,9,20,0,Math.PI/3,-Math.PI/4,g13);//y=15
 
-    gf.add(g12);
 
-    initX = 0;
-    initY = 35;
-    gf.position.set(initX,initY,0);
+    gf.add(g13);
+    createSphere(0,0,0,5,gf);
+
+    createCone(0,0,0,0,0,0,7,10,g14);
+    g15.add(g14);
+    createCylinder(8.5,2,0,10,0,0,-Math.PI/3,g15);
+    g16.add(g15);
+    createTorusKnot(18,8,0,g16);
+    g17.add(g16);
+    createCylinder(-8.5,2,0,10,0,0,Math.PI/3,g17);
+    g18.add(g17);
+    createTorusKnot(-18,8,0,g18);
+    g18.position.set(0,-5,0);
+
+
+
+    g19.add(g18);
+    createCylinder(5,4.5,-8,20,-Math.PI/4,0,-Math.PI/8,g19);
+    g20.add(g19);
+    createCone(8,17,-14,0,0,0,7,10,g20);
+    g20.position.set(-8,-17,14);
+
+
+    g21.add(g20);
+    createCylinder(-7.5,3,0,10,0,0,Math.PI/4,g21);
+    g22.add(g21);
+    createTorus(-15,8,0, Math.PI/4, 0, 0,g22);
+    g22.position.set(15,-8,0);
+
+
+
+    g23.add(g22);
+    createCylinder(0,3,-3,10,-Math.PI/4,0,0,g23);
+    g24.add(g23);
+    createCone(0,10,-10,-Math.PI/4,0,0,7,10,g24);
+    g24.position.set(0,-10,10);
+
+
+    g25.add(g24);
+    createCylinder(10,6,-5,20,-Math.PI/4,0, -Math.PI/4,g25);
+    g26.add(g25);
+    createSphere(20.5,13,-13.5,5,g26);
+    g26.position.set(7,3,-4);
+
+
+
+    g27.add(g26);
+    createCylinder(-10,0,0,20,0,0, -Math.PI/2,g27);
+    g27.position.set(25,0,0);
+    g27.rotation.x= Math.PI/3;
+
+
+    gf.add(g27);
+
+    gf.position.set(0,35,0);
     
 
     scene.add(gf);
@@ -337,11 +382,11 @@ function onKeyDown(e) {
         break;
     case 68: //D
     case 100: //d
-        resetX = 1;
+        dz = 1;
         break;
     case 67: //C
     case 99: //c
-        resetY = 1;
+        cz = 1;
         break;
     }   
 }
@@ -388,11 +433,11 @@ function onKeyUp(e) {
         break;
     case 68: //D
     case 100: //d
-        resetX = 0;
+        dz = 0;
         break;
     case 67: //C
     case 99: //c
-        resetY = 0;
+        cz = 0;
         break;
     } 
     
@@ -409,16 +454,16 @@ function movement(deltaTime){
         gf.rotateY(-angle);
     }
     if(v2R == 1){
-        g12.rotateX(angle);
+        g27.rotateX(angle);
     }
     if(v2L == 1){
-        g12.rotateX(-angle);
+        g27.rotateX(-angle);
     }
     if(v3R == 1){
-        g4.rotateY(angle);
+        g9.rotateY(angle);
     }
     if(v3L == 1){
-        g4.rotateY(-angle);
+        g9.rotateY(-angle);
     }
     if(left == 1){
         gf.translateX(-vel);
@@ -432,11 +477,11 @@ function movement(deltaTime){
     if(up == 1){
         gf.translateY(vel);
     }
-    if(resetX == 1){
-        gf.position.x = initX;
+    if(dz == 1){
+        gf.translateZ(-vel);
     }
-    if(resetY == 1){
-        gf.position.y = initY;
+    if(cz == 1){
+        gf.translateZ(vel);
     }
 
 }
