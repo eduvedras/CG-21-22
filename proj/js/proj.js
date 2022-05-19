@@ -5,12 +5,7 @@ var dz,cz;
 var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27, gf;
 
 var geometry, material, mesh;
-/**
- * disposição dos objetos -> não tem de estar ligados obrigatório hierarquia
- * grafo de cena -> só é obrigatório apresentar 3 objetos (aconselha se fazer para os mais dificeis)
- * movimentar -> d e c para mexer no eixo z
- * submeter no moodle
- */
+
 function createCube(x, y, z, width, height, depth, g) {
     'use strict';
 
@@ -263,7 +258,7 @@ function createScene() {
     createCube(-22.5, 0, 0, 5, 5, 5, g12);
     
     g13.add(g12);
-    createCylinder(0,0,-15,20,Math.PI/2,0,0,g13);//y=15
+    createCylinder(0,0,-15,20,Math.PI/2,0,0,g13);
     g13.position.set(0,0,30);
 
 
