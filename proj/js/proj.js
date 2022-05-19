@@ -101,6 +101,45 @@ function createCylinder(x, y, z, len, rotx, roty, rotz, g) {
 
 }
 
+function createGeneralizedCylinder(x, y, z, rotx, roty, rotz, g) {
+    'use strict';
+    
+    var cylinder = new THREE.Object3D();
+    
+    material = new THREE.MeshBasicMaterial({ color: 0x008000, wireframe: true });
+
+    class CustomSinCurve extends THREE.Curve {
+        constructor(scale) {
+          super();
+          this.scale = scale;
+        }
+        getPoint(t) {
+          const tx = t * 3 - 1.5;
+          const ty = Math.sin(2 * Math.PI * t);
+          const tz = 0;
+          return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+        }
+    }
+      
+    const path = new CustomSinCurve(4);
+    const tubularSegments = 20;  // ui: tubularSegments
+    const radius = 1;  // ui: radius
+    const radialSegments = 8;  // ui: radialSegments
+    const closed = false;  // ui: closed
+    const geometry = new THREE.TubeGeometry(
+        path, tubularSegments, radius, radialSegments, closed);
+   
+    mesh = new THREE.Mesh(geometry, material);
+    cylinder.add(mesh);
+
+    cylinder.rotation.set(rotx, roty, rotz);
+
+    cylinder.position.set(x,y,z);
+
+    g.add(cylinder);
+
+}
+
 function createCone(x, y, z, rotx, roty, rotz, r, h, g) {
     'use strict';
     
@@ -222,10 +261,10 @@ function createScene() {
     createCylinder(-12.5, 0, 0, 15, 0, 0, Math.PI/2, g11);
     g12.add(g11);
     createCube(-22.5, 0, 0, 5, 5, 5, g12);
-    g12.position.set(-8,-24,15);
     
     g13.add(g12);
-    createCylinder(-5.5,-11,9,20,0,Math.PI/3,-Math.PI/4,g13);//y=15
+    createCylinder(0,0,-15,20,Math.PI/2,0,0,g13);//y=15
+    g13.position.set(0,0,30);
 
 
     gf.add(g13);
@@ -269,10 +308,8 @@ function createScene() {
     g25.add(g24);
     createCylinder(10,6,-5,20,-Math.PI/4,0, -Math.PI/4,g25);
     g26.add(g25);
-    createSphere(20.5,13,-13.5,5,g26);
+    createGeneralizedCylinder(18,12,-10,0,0,0,g26);
     g26.position.set(7,3,-4);
-
-
 
     g27.add(g26);
     createCylinder(-10,0,0,20,0,0, -Math.PI/2,g27);
@@ -282,18 +319,17 @@ function createScene() {
 
     gf.add(g27);
 
-    gf.position.set(0,35,0);
+    gf.position.set(0,5,0);
     
-
     scene.add(gf);
 }
 
 function createCamera() {
     'use strict';
-    LateralCamera = new THREE.OrthographicCamera(window.innerWidth/-12,
-                                         window.innerWidth/12,
-                                         window.innerHeight/12,
-                                         window.innerHeight/-12,
+    LateralCamera = new THREE.OrthographicCamera(window.innerWidth/-10,
+                                         window.innerWidth/10,
+                                         window.innerHeight/10,
+                                         window.innerHeight/-10,
                                          1,
                                          1000);
     LateralCamera.position.x = 100;
@@ -301,10 +337,10 @@ function createCamera() {
     LateralCamera.position.z = 0;
     LateralCamera.lookAt(scene.position);
 
-    FrontalCamera = new THREE.OrthographicCamera(window.innerWidth/-12,
-                                        window.innerWidth/12,
-                                        window.innerHeight/12,
-                                        window.innerHeight/-12,
+    FrontalCamera = new THREE.OrthographicCamera(window.innerWidth/-10,
+                                        window.innerWidth/10,
+                                        window.innerHeight/10,
+                                        window.innerHeight/-10,
                                         1,
                                         1000);
     FrontalCamera.position.x = 0;
@@ -312,10 +348,10 @@ function createCamera() {
     FrontalCamera.position.z = 100;
     FrontalCamera.lookAt(scene.position);
 
-    TopCamera = new THREE.OrthographicCamera(window.innerWidth/-12,
-                                        window.innerWidth/12,
-                                        window.innerHeight/12,
-                                        window.innerHeight/-12,
+    TopCamera = new THREE.OrthographicCamera(window.innerWidth/-10,
+                                        window.innerWidth/10,
+                                        window.innerHeight/10,
+                                        window.innerHeight/-10,
                                         1,
                                         1000);
     TopCamera.position.x = 0;
@@ -338,11 +374,7 @@ function onKeyDown(e) {
         cameraInUse = 3;
         break;
     case 52: //4
-        scene.traverse(function (node) {
-            if (node instanceof THREE.Mesh) {
-                node.material.wireframe = !node.material.wireframe;
-            }
-        });
+        wire();
         break;
     case 81: //Q
     case 113://q
@@ -454,10 +486,10 @@ function movement(deltaTime){
         gf.rotateY(-angle);
     }
     if(v2R == 1){
-        g27.rotateX(angle);
+        g13.rotateZ(angle);
     }
     if(v2L == 1){
-        g27.rotateX(-angle);
+        g13.rotateZ(-angle);
     }
     if(v3R == 1){
         g9.rotateY(angle);
@@ -484,6 +516,14 @@ function movement(deltaTime){
         gf.translateZ(vel);
     }
 
+}
+
+function wire(){
+    gf.traverse(function (node) {
+        if (node instanceof THREE.Mesh) {
+            node.material.wireframe = !node.material.wireframe;
+        }
+    });
 }
 
 function render() {
