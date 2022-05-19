@@ -378,47 +378,47 @@ function onKeyDown(e) {
         break;
     case 81: //Q
     case 113://q
-        v1R=1;
+        v1R=true;
         break;
     case 87: //W
     case 119://w
-        v1L=1;
+        v1L=true;
         break;
     case 65: //A
     case 97://a
-        v2R=1;
+        v2R=true;
         break;
     case 83: //S
     case 115://s
-        v2L=1;
+        v2L=true;
         break;
     case 90: //Z
     case 122://z
-        v3R=1;
+        v3R=true;
         break;
     case 88: //X
     case 120://x
-        v3L=1;
+        v3L=true;
         break;
     case 37: //left arrow
-        left = 1;
+        left = true;
         break;
     case 38: //up arrow
-        up = 1;
+        up = true;
         break;
     case 39: //right arrow
-        right = 1;
+        right = true;
         break;
     case 40: //down arrow
-        down = 1;
+        down = true;
         break;
     case 68: //D
     case 100: //d
-        dz = 1;
+        dz = true;
         break;
     case 67: //C
     case 99: //c
-        cz = 1;
+        cz = true;
         break;
     }   
 }
@@ -429,47 +429,47 @@ function onKeyUp(e) {
     switch (e.keyCode) {
     case 81: //Q
     case 113://q
-        v1R=0;
+        v1R=false;
         break;
     case 87: //W
     case 119://w
-        v1L=0;
+        v1L=false;
         break;
     case 65: //A
     case 97://a
-        v2R=0;
+        v2R=false;
         break;
     case 83: //S
     case 115://s
-        v2L=0;
+        v2L=false;
         break;
     case 90: //Z
     case 122://z
-        v3R=0;
+        v3R=false;
         break;
     case 88: //X
     case 120://x
-        v3L=0;
+        v3L=false;
         break;
     case 37: //left arrow
-        left = 0;
+        left = false;
         break;
     case 38: //up arrow
-        up = 0;
+        up = false;
         break;
     case 39: //right arrow
-        right = 0;
+        right = false;
         break;
     case 40: //down arrow
-        down = 0;
+        down = false;
         break;
     case 68: //D
     case 100: //d
-        dz = 0;
+        dz = false;
         break;
     case 67: //C
     case 99: //c
-        cz = 0;
+        cz = false;
         break;
     } 
     
@@ -479,40 +479,40 @@ function movement(deltaTime){
 
     const angle = deltaTime * 4;
     const vel = deltaTime * 8;
-    if(v1R == 1){
+    if(v1R == true){
         gf.rotateY(angle);
     }
-    if(v1L == 1){
+    if(v1L == true){
         gf.rotateY(-angle);
     }
-    if(v2R == 1){
+    if(v2R == true){
         g13.rotateZ(angle);
     }
-    if(v2L == 1){
+    if(v2L == true){
         g13.rotateZ(-angle);
     }
-    if(v3R == 1){
+    if(v3R == true){
         g9.rotateY(angle);
     }
-    if(v3L == 1){
+    if(v3L == true){
         g9.rotateY(-angle);
     }
-    if(left == 1){
+    if(left == true){
         gf.translateX(-vel);
     }
-    if(right == 1){
+    if(right == true){
         gf.translateX(vel);
     }
-    if(down == 1){
+    if(down == true){
         gf.translateY(-vel);
     }
-    if(up == 1){
+    if(up == true){
         gf.translateY(vel);
     }
-    if(dz == 1){
+    if(dz == true){
         gf.translateZ(-vel);
     }
-    if(cz == 1){
+    if(cz == true){
         gf.translateZ(vel);
     }
 
