@@ -287,10 +287,10 @@ function createCamera() {
                                             1,
                                             1000);
     MobilePerspCamera.position.set(
-        (1.5*R)*Math.sin(fi)*Math.cos(teta),
-        (1.5*R)*Math.cos(fi),
-        (1.5*R)*Math.sin(fi)*Math.sin(teta));
-    MobilePerspCamera.lookAt(rocket.position);
+        (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
+        (1.8*R)*Math.cos(fi+Math.PI/10),
+        (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta));
+    MobilePerspCamera.lookAt(rocket.self.position);
 }
 
 function onKeyDown(e) {
@@ -386,7 +386,7 @@ function detectCollisions(){
 
 function movement(deltaTime){
 
-    const angle = deltaTime * 4;
+    const angle = deltaTime * 2;
     const vel = deltaTime * 8;
     let next_position;
     
@@ -397,6 +397,11 @@ function movement(deltaTime){
             (1.2*R)*Math.cos(fi),
             (1.2*R)*Math.sin(fi)*Math.sin(teta-angle)
         );
+        MobilePerspCamera.position.set(
+            (1.8*R)*Math.sin(fi)*Math.cos(teta+Math.PI/10),
+            (1.8*R)*Math.cos(fi),
+            (1.8*R)*Math.sin(fi)*Math.sin(teta+Math.PI/10)
+        );
     }
     if(right == true){
         teta += angle;
@@ -404,6 +409,11 @@ function movement(deltaTime){
             (1.2*R)*Math.sin(fi)*Math.cos(teta+angle),
             (1.2*R)*Math.cos(fi),
             (1.2*R)*Math.sin(fi)*Math.sin(teta+angle)
+        );
+        MobilePerspCamera.position.set(
+            (1.8*R)*Math.sin(fi)*Math.cos(teta-Math.PI/10),
+            (1.8*R)*Math.cos(fi),
+            (1.8*R)*Math.sin(fi)*Math.sin(teta-Math.PI/10)
         );
     }
     if(down == true){
@@ -413,6 +423,11 @@ function movement(deltaTime){
             (1.2*R)*Math.cos(fi+angle),
             (1.2*R)*Math.sin(fi+angle)*Math.sin(teta)
         );
+        MobilePerspCamera.position.set(
+            (1.8*R)*Math.sin(fi-Math.PI/10)*Math.cos(teta),
+            (1.8*R)*Math.cos(fi-Math.PI/10),
+            (1.8*R)*Math.sin(fi-Math.PI/10)*Math.sin(teta)
+        );
     }
     if(up == true){
         fi -= angle;
@@ -420,6 +435,11 @@ function movement(deltaTime){
             (1.2*R)*Math.sin(fi-angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi-angle),
             (1.2*R)*Math.sin(fi-angle)*Math.sin(teta)
+        );
+        MobilePerspCamera.position.set(
+            (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
+            (1.8*R)*Math.cos(fi+Math.PI/10),
+            (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta)
         );
     }
     if(left == true || right == true || down == true || up == true){
@@ -439,11 +459,11 @@ function movement(deltaTime){
             (1.2*R)*Math.sin(fi)*Math.sin(teta)
         )*/
 
-        MobilePerspCamera.position.set(
+        /*MobilePerspCamera.position.set(
             (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
             (1.8*R)*Math.cos(fi+Math.PI/10),
             (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta)
-        );
+        );*/
         MobilePerspCamera.lookAt(rocket.self.position);
     }
 
