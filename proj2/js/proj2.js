@@ -405,26 +405,23 @@ function movement(deltaTime){
         
     }
     if(left == true || right == true || down == true || up == true){
-        /*let direction = new THREE.Vector3(50*((1.2*R)*Math.sin(fi)*Math.cos(teta)-rocket.position.x),
-                    50*((1.2*R)*Math.cos(fi)-rocket.position.y),
-                    50*((1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.position.z));
+        let direction = new THREE.Vector3((1.2*R)*Math.sin(fi)*Math.cos(teta)-rocket.self.position.x,
+                    (1.2*R)*Math.cos(fi)-rocket.self.position.y,
+                    (1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.self.position.z);
 
-        //direction.normalize();
-        console.log(direction.x);
-        console.log(direction.y);
-        console.log(direction.z);
-        rocket.lookAt(direction);*/
+        direction.normalize();
+        rocket.self.translateOnAxis(direction, 1);
 
-        rocket.self.position.set(
+        /*rocket.self.position.set(
             (1.2*R)*Math.sin(fi)*Math.cos(teta),
             (1.2*R)*Math.cos(fi),
             (1.2*R)*Math.sin(fi)*Math.sin(teta)
-        )
+        )*/
 
         MobilePerspCamera.position.set(
             rocket.self.position.x - 10,
             rocket.self.position.y + 10,
-            rocket.self.position.z //+ direction.z * 30
+            rocket.self.position.z
         );
         MobilePerspCamera.lookAt(rocket.self.position);
     }
