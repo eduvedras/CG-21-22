@@ -409,8 +409,11 @@ function movement(deltaTime){
                     (1.2*R)*Math.cos(fi)-rocket.self.position.y,
                     (1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.self.position.z);
 
-        direction.normalize();
-        rocket.self.translateOnAxis(direction, 1);
+        //direction.normalize();
+        rocket.self.position.x += direction.x;
+        rocket.self.position.y += direction.y;
+        rocket.self.position.z += direction.z;
+        rocket.self.lookAt(direction);
 
         /*rocket.self.position.set(
             (1.2*R)*Math.sin(fi)*Math.cos(teta),
@@ -419,9 +422,9 @@ function movement(deltaTime){
         )*/
 
         MobilePerspCamera.position.set(
-            rocket.self.position.x - 10,
-            rocket.self.position.y + 10,
-            rocket.self.position.z
+            (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
+            (1.8*R)*Math.cos(fi+Math.PI/10),
+            (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta)
         );
         MobilePerspCamera.lookAt(rocket.self.position);
     }
