@@ -189,6 +189,7 @@ class collObject extends THREE.Object3D {
                 (1.2*R)*Math.cos(fi),
                 (1.2*R)*Math.sin(fi)*Math.sin(teta));
         group2.rotation.set(0,0,-Math.PI/2);
+        group2.add(new THREE.AxisHelper(10));
         gf.add(group2);
         return group2;
     }
@@ -387,22 +388,39 @@ function movement(deltaTime){
 
     const angle = deltaTime * 4;
     const vel = deltaTime * 8;
+    let next_position;
     
     if(left == true){
         teta -= angle;
-        
+        next_position = new THREE.Vector3(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta-angle),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta-angle)
+        );
     }
     if(right == true){
         teta += angle;
-        
+        next_position = new THREE.Vector3(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta+angle),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta+angle)
+        );
     }
     if(down == true){
         fi += angle;
-       
+        next_position = new THREE.Vector3(
+            (1.2*R)*Math.sin(fi+angle)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi+angle),
+            (1.2*R)*Math.sin(fi+angle)*Math.sin(teta)
+        );
     }
     if(up == true){
         fi -= angle;
-        
+        next_position = new THREE.Vector3(
+            (1.2*R)*Math.sin(fi-angle)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi-angle),
+            (1.2*R)*Math.sin(fi-angle)*Math.sin(teta)
+        );
     }
     if(left == true || right == true || down == true || up == true){
         let direction = new THREE.Vector3((1.2*R)*Math.sin(fi)*Math.cos(teta)-rocket.self.position.x,
@@ -413,8 +431,8 @@ function movement(deltaTime){
         rocket.self.position.x += direction.x;
         rocket.self.position.y += direction.y;
         rocket.self.position.z += direction.z;
-        rocket.self.lookAt(direction);
-
+        rocket.self.lookAt(next_position);
+        rocket.self.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI/2);
         /*rocket.self.position.set(
             (1.2*R)*Math.sin(fi)*Math.cos(teta),
             (1.2*R)*Math.cos(fi),
