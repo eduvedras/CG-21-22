@@ -12,6 +12,7 @@ var teta = 2*Math.PI*Math.random();
 var oldfi = fi;
 var oldteta = teta;
 var anglefi, angleteta;
+var collidableList = new Array();
 var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27, gf,rocket;
 const R = 50,body_length = 3;
 var geometry, material, mesh;
@@ -28,15 +29,19 @@ class collObject extends THREE.Object3D {
         super();
         if(type == 0){
             this.self = this.createCube();
+            this.radius = 1.2;
         }
         if(type == 1){
             this.self = this.createCylinder();
+            this.radius = 1.2;
         }
         if(type == 2){
             this.self = this.createCone();
+            this.radius = 1.2;
         }
         if(type == "Rocket"){
             this.self = this.createRocket();
+            this.radius = 2.5;
         }
     }
 
@@ -61,6 +66,7 @@ class collObject extends THREE.Object3D {
             (1.2*R)*Math.sin(anglefi)*Math.sin(angleteta));
     
         gf.add(cube);
+        return cube;
     
     }
     
@@ -90,6 +96,7 @@ class collObject extends THREE.Object3D {
             (1.2*R)*Math.sin(anglefi)*Math.sin(angleteta));
     
         gf.add(cylinder);
+        return cylinder;
         
     }
     
@@ -117,6 +124,7 @@ class collObject extends THREE.Object3D {
             (1.2*R)*Math.sin(anglefi)*Math.sin(angleteta));
     
         gf.add(cone);
+        return cone;
     
     }
     
@@ -183,8 +191,12 @@ class collObject extends THREE.Object3D {
         group2.rotation.set(0,0,-Math.PI/2);
         gf.add(group2);
         return group2;
-        
     }
+
+    hasColl(coll) {
+        return distance(this.self.position, coll.self.position) < (this.radius + coll.radius);
+    }
+
 }
 
 function createSphere(x, y, z, r, g) {
@@ -209,6 +221,10 @@ function createSphere(x, y, z, r, g) {
     g.add(sphere);
 }
 
+function distance(pos1, pos2) {
+    return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y -pos2.y) ** 2 + (pos1.z - pos2.z) ** 2);
+}
+
 function createScene() {
     'use strict';
     
@@ -220,10 +236,13 @@ function createScene() {
     createSphere(0,0,0,R,gf);
     rocket = new collObject("Rocket");
 
+    let aux;
+
     for(let i = 0; i<20;i++){
-        new collObject(Math.floor(Math.random()*3))
+        aux = new collObject(Math.floor(Math.random()*3));
+        collidableList.push(aux);
     }
-    
+
     scene.add(gf);
 }
 
@@ -352,6 +371,18 @@ function onResize() {
 
 }
 
+function detectCollisions(){
+    for (var i = 0; i < collidableList.length; i ++ ){
+        if(rocket.hasColl(collidableList[i])){
+            console.log("hit");
+            scene.remove(gf);
+            gf.remove(collidableList[i].self);
+            collidableList.splice(i,1);
+            scene.add(gf);
+        }
+    }
+}
+
 function movement(deltaTime){
 
     const angle = deltaTime * 4;
@@ -437,6 +468,8 @@ function animate() {
     let deltaTime = clock.getDelta();
 
     movement(deltaTime);
+
+    detectCollisions();
     
     render();
     
