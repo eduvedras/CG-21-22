@@ -458,6 +458,7 @@ function movement(deltaTime){
             (1.8*R)*Math.cos(fi),
             (1.8*R)*Math.sin(fi)*Math.sin(teta+Math.PI/10)
         );
+
     }
     if(right == true){
         teta += angle;
@@ -521,6 +522,13 @@ function movement(deltaTime){
             (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta)
         );*/
         MobilePerspCamera.lookAt(rocket.self.position);
+
+        if(up == true && Math.floor(((fi+Math.PI/3.799)/Math.PI))%2!=0){
+            MobilePerspCamera.rotateZ(Math.PI);
+        }
+        if(down == true && Math.floor(((fi-Math.PI/3.799)/Math.PI))%2!=0){
+            MobilePerspCamera.rotateZ(Math.PI);
+        }
     }
 
 }
