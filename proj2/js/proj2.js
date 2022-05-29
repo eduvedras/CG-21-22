@@ -12,7 +12,14 @@ var teta = 2*Math.PI*Math.random();
 var oldfi = fi;
 var oldteta = teta;
 var anglefi, angleteta;
-var collidableList = new Array();
+var firstQ = new Array();
+var secondQ = new Array();
+var thirdQ = new Array();
+var fourthQ = new Array();
+var fifthQ = new Array();
+var sixthQ = new Array();
+var seventhQ = new Array();
+var eighthQ = new Array();
 var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27, gf,rocket;
 const R = 50,body_length = 3;
 var geometry, material, mesh;
@@ -241,7 +248,30 @@ function createScene() {
 
     for(let i = 0; i<20;i++){
         aux = new collObject(Math.floor(Math.random()*3));
-        collidableList.push(aux);
+        if(aux.self.position.x + aux.radius >= 0 && aux.self.position.y + aux.radius >= 0 && aux.self.position.z + aux.radius >= 0){
+            firstQ.push(aux);
+        }
+        if(aux.self.position.x + aux.radius >= 0 && aux.self.position.y + aux.radius >= 0 && aux.self.position.z - aux.radius < 0){
+            secondQ.push(aux);
+        }
+        if(aux.self.position.x - aux.radius < 0 && aux.self.position.y + aux.radius >= 0 && aux.self.position.z - aux.radius <= 0){
+            thirdQ.push(aux);
+        }
+        if(aux.self.position.x - aux.radius < 0 && aux.self.position.y + aux.radius >= 0 && aux.self.position.z + aux.radius > 0){
+            fourthQ.push(aux);
+        }
+        if(aux.self.position.x + aux.radius >= 0 && aux.self.position.y - aux.radius < 0 && aux.self.position.z + aux.radius >= 0){
+            fifthQ.push(aux);
+        }
+        if(aux.self.position.x + aux.radius >= 0 && aux.self.position.y - aux.radius < 0 && aux.self.position.z - aux.radius < 0){
+            sixthQ.push(aux);
+        }
+        if(aux.self.position.x - aux.radius < 0 && aux.self.position.y - aux.radius < 0 && aux.self.position.z - aux.radius <= 0){
+            seventhQ.push(aux);
+        }
+        if(aux.self.position.x - aux.radius < 0 && aux.self.position.y - aux.radius < 0 && aux.self.position.z + aux.radius > 0){
+            eighthQ.push(aux);
+        }
     }
 
     scene.add(gf);
@@ -373,13 +403,39 @@ function onResize() {
 }
 
 function detectCollisions(){
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z + rocket.radius >= 0){
+        collisions(firstQ);
+    }
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z - rocket.radius < 0){
+        collisions(secondQ);
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z - rocket.radius <= 0){
+        collisions(thirdQ);
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z + rocket.radius > 0){
+        collisions(fourthQ);
+    }
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z + rocket.radius >= 0){
+        collisions(fifthQ);
+    }
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z - rocket.radius < 0){
+        collisions(sixthQ);
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z - rocket.radius <= 0){
+        collisions(seventhQ);
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z + rocket.radius > 0){
+        collisions(eighthQ);
+    }
+}
+
+function collisions(collidableList){
     for (var i = 0; i < collidableList.length; i ++ ){
         if(rocket.hasColl(collidableList[i])){
-            console.log("hit");
-            scene.remove(gf);
-            gf.remove(collidableList[i].self);
+            if(collidableList[i].self.parent === gf){
+                gf.remove(collidableList[i].self);
+            }
             collidableList.splice(i,1);
-            scene.add(gf);
         }
     }
 }
