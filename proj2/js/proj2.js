@@ -1,5 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 
+//import * as THREE from 'three';
+
 var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
 var dz,cz,toRemove=null;
 var width=200, height=130, cameraRatio = (width/height);
@@ -62,7 +64,7 @@ class collObject extends THREE.Object3D {
         
         material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     
-        geometry = new THREE.CubeGeometry(2.3, 2.3, 2.3);
+        geometry = new THREE.BoxGeometry(2.3, 2.3, 2.3);
         mesh = new THREE.Mesh(geometry, material);
         
         cube.add(mesh);
@@ -196,7 +198,7 @@ class collObject extends THREE.Object3D {
                 (1.2*R)*Math.cos(fi),
                 (1.2*R)*Math.sin(fi)*Math.sin(teta));
         group2.rotation.set(0,0,-Math.PI/2);
-        group2.add(new THREE.AxisHelper(10));
+        group2.add(new THREE.AxesHelper(10));
         let next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi-Math.PI/10)*Math.cos(teta),
             (1.2*R)*Math.cos(fi-Math.PI/10),
@@ -245,7 +247,7 @@ function createScene() {
     
     scene = new THREE.Scene();
     
-    scene.add(new THREE.AxisHelper(10));
+    scene.add(new THREE.AxesHelper(10));
 
     gf = new THREE.Object3D();
     createSphere(0,0,0,R,gf);
