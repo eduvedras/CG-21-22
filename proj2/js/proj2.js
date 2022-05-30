@@ -149,14 +149,14 @@ class collObject extends THREE.Object3D {
     
     
         const body_radius = 2;
-        const propellent_radius = 1;
+        const propellent_radius = 0.8;
         const propellent_length = 1.7;
-        const propellent_x = body_radius+propellent_radius/2;
+        const propellent_x = body_radius/1.5;
         const propellent_y = -propellent_length/2-body_length/4;
-        const propellent_z = body_radius+propellent_radius/2;
+        const propellent_z = body_radius/1.5;
     
-        material = new THREE.MeshBasicMaterial({ color: 0x256278, wireframe: true });
-        geometry = new THREE.CylinderGeometry(propellent_radius,propellent_radius,propellent_length);
+        material = new THREE.MeshBasicMaterial({ color: 0x32CD32, wireframe: true });
+        geometry = new THREE.CapsuleGeometry(propellent_radius,propellent_radius,propellent_length);
         mesh = new THREE.Mesh(geometry,material);
         propellent1.add(mesh);
         propellent1.position.set(propellent_x,propellent_y,propellent_z);
@@ -498,7 +498,17 @@ function movement(deltaTime){
         );
     }
     if(down == true){
-        fi += angle;
+        if(left == true){
+            teta -= angle/2;
+            fi += angle/2;
+        }
+        else if(right == true){
+            teta += angle/2;
+            fi += angle/2;
+        }
+        else{
+            fi += angle;
+        }
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi+angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi+angle),
@@ -511,7 +521,17 @@ function movement(deltaTime){
         );
     }
     if(up == true){
-        fi -= angle;
+        if(left == true){
+            teta -= angle/2;
+            fi -= angle/2;
+        }
+        else if(right == true){
+            teta += angle/2;
+            fi -= angle/2;
+        }
+        else{
+            fi -= angle;
+        }
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi-angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi-angle),
