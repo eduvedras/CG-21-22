@@ -1,7 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
-var dz,cz;
+var dz,cz,toRemove=null;
 var width=200, height=130, cameraRatio = (width/height);
 /**
  * teta = latitute
@@ -197,6 +197,13 @@ class collObject extends THREE.Object3D {
                 (1.2*R)*Math.sin(fi)*Math.sin(teta));
         group2.rotation.set(0,0,-Math.PI/2);
         group2.add(new THREE.AxisHelper(10));
+        let next_position = new THREE.Vector3(
+            (1.2*R)*Math.sin(fi-Math.PI/10)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi-Math.PI/10),
+            (1.2*R)*Math.sin(fi-Math.PI/10)*Math.sin(teta)
+        );
+        group2.lookAt(next_position);
+        group2.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI/2);
         gf.add(group2);
         return group2;
     }
@@ -432,35 +439,36 @@ function detectCollisions(){
 function collisions(collidableList){
     for (var i = 0; i < collidableList.length; i ++ ){
         if(rocket.hasColl(collidableList[i])){
-            if(collidableList[i].self.parent === gf){
-                gf.remove(collidableList[i].self);
-            }
+            let correction_vector = new THREE.Vector3(
+                rocket.self.position.x-collidableList[i].self.position.x,
+                rocket.self.position.y-collidableList[i].self.position.y,
+                rocket.self.position.z-collidableList[i].self.position.z
+            );
+            let current_dist = Math.sqrt(
+                Math.pow(correction_vector.x,2)+
+                Math.pow(correction_vector.y,2)+
+                Math.pow(correction_vector.z,2));
+            let wanted_dist = rocket.radius+collidableList[i].radius;
+            toRemove = collidableList[i];
+            rocket.self.translateOnAxis(correction_vector,wanted_dist-current_dist);                    
+
             collidableList.splice(i,1);
         }
+    }
+}
+
+function clearCollisions(){
+    if(toRemove!=null){
+        gf.remove(toRemove.self);
+        toRemove=null;
     }
 }
 
 function movement(deltaTime){
 
     const angle = deltaTime * 2;
-    const vel = deltaTime * 8;
-    let next_position;
     
     if(left == true){
-        teta -= angle;
-        next_position = new THREE.Vector3(
-            (1.2*R)*Math.sin(fi)*Math.cos(teta-angle),
-            (1.2*R)*Math.cos(fi),
-            (1.2*R)*Math.sin(fi)*Math.sin(teta-angle)
-        );
-        MobilePerspCamera.position.set(
-            (1.8*R)*Math.sin(fi)*Math.cos(teta+Math.PI/10),
-            (1.8*R)*Math.cos(fi),
-            (1.8*R)*Math.sin(fi)*Math.sin(teta+Math.PI/10)
-        );
-
-    }
-    if(right == true){
         teta += angle;
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi)*Math.cos(teta+angle),
@@ -471,6 +479,20 @@ function movement(deltaTime){
             (1.8*R)*Math.sin(fi)*Math.cos(teta-Math.PI/10),
             (1.8*R)*Math.cos(fi),
             (1.8*R)*Math.sin(fi)*Math.sin(teta-Math.PI/10)
+        );
+
+    }
+    if(right == true){
+        teta -= angle;
+        next_position = new THREE.Vector3(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta-angle),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta-angle)
+        );
+        MobilePerspCamera.position.set(
+            (1.8*R)*Math.sin(fi)*Math.cos(teta+Math.PI/10),
+            (1.8*R)*Math.cos(fi),
+            (1.8*R)*Math.sin(fi)*Math.sin(teta+Math.PI/10)
         );
     }
     if(down == true){
@@ -504,7 +526,8 @@ function movement(deltaTime){
                     (1.2*R)*Math.cos(fi)-rocket.self.position.y,
                     (1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.self.position.z);
 
-        //direction.normalize();
+        // direction.normalize();
+
         rocket.self.position.x += direction.x;
         rocket.self.position.y += direction.y;
         rocket.self.position.z += direction.z;
@@ -568,6 +591,8 @@ function animate() {
     'use strict';
 
     let deltaTime = clock.getDelta();
+
+    clearCollisions();
 
     movement(deltaTime);
 
