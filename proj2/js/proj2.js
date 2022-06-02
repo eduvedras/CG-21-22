@@ -223,8 +223,8 @@ function createSphere(x, y, z, r, g) {
     sphere.userData = { jumping: true, step: 0 };
 
     const radius = r;  // ui: radius
-    const widthSegments = 12;  // ui: widthSegments
-    const heightSegments = 8;  // ui: heightSegments
+    const widthSegments = 22;  // ui: widthSegments
+    const heightSegments = 18;  // ui: heightSegments
     
     material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
     geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
