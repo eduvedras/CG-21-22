@@ -475,7 +475,7 @@ function clearCollisions(){
 
 function movement(deltaTime){
 
-    const angle = deltaTime * 0.8;
+    const angle = deltaTime * 1;
     let collidableList;
     if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z + rocket.radius >= 0){
         collidableList = firstQ;
@@ -670,25 +670,7 @@ function movement(deltaTime){
         );
         rocket.self.lookAt(next_position);
         rocket.self.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI/2);
-        /*rocket.self.position.set(
-            (1.2*R)*Math.sin(fi)*Math.cos(teta),
-            (1.2*R)*Math.cos(fi),
-            (1.2*R)*Math.sin(fi)*Math.sin(teta)
-        )*/
-
-        /*MobilePerspCamera.position.set(
-            (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
-            (1.8*R)*Math.cos(fi+Math.PI/10),
-            (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta)
-        );*/
-
-
-
-
-
-
         
-
         MobilePerspCamera.lookAt(rocket.self.position);
 
         if(up == true && Math.floor(((fi+Math.PI/3.799)/Math.PI))%2!=0){
@@ -735,8 +717,9 @@ function init() {
 function update(){
     let deltaTime = clock.getDelta();
     clearCollisions();
+    detectCollisions();
     movement(deltaTime);
-    //detectCollisions();
+    
 }
 
 function animate() {
