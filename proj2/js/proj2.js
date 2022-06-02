@@ -609,16 +609,17 @@ function init() {
     window.addEventListener("resize", onResize);
 }
 
+function update(){
+    let deltaTime = clock.getDelta();
+    clearCollisions();
+    movement(deltaTime);
+    detectCollisions();
+}
+
 function animate() {
     'use strict';
 
-    let deltaTime = clock.getDelta();
-
-    clearCollisions();
-
-    movement(deltaTime);
-
-    detectCollisions();
+    update();
     
     render();
     
