@@ -3,7 +3,7 @@
 //import * as THREE from 'three';
 
 var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
-var dz,cz,toRemove=null, col;
+var dz,cz,toRemove=null;
 var width=200, height=130, cameraRatio = (width/height);
 /**
  * teta = latitute
@@ -452,10 +452,16 @@ function collisions(collidableList){
                 Math.pow(correction_vector.z,2));
             let wanted_dist = rocket.radius+collidableList[i].radius;
             toRemove = collidableList[i];
-            rocket.self.translateOnAxis(correction_vector,wanted_dist-current_dist);               
-
+            correction_vector.normalize();
+            correction_vector.x = correction_vector.x*Math.sqrt(wanted_dist-current_dist)
+            correction_vector.y = correction_vector.y*Math.sqrt(wanted_dist-current_dist)
+            correction_vector.z = correction_vector.z*Math.sqrt(wanted_dist-current_dist)
+            rocket.self.translateOnAxis(correction_vector,wanted_dist-current_dist);                    
+            rocket.self.position.normalize();
+            rocket.self.position.x = rocket.self.position.x*1.2*R;
+            rocket.self.position.y = rocket.self.position.y*1.2*R;
+            rocket.self.position.z = rocket.self.position.z*1.2*R;
             collidableList.splice(i,1);
-            col = true;
         }
     }
 }
@@ -469,7 +475,33 @@ function clearCollisions(){
 
 function movement(deltaTime){
 
-    const angle = deltaTime * 2;
+    const angle = deltaTime * 0.8;
+    let collidableList;
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z + rocket.radius >= 0){
+        collidableList = firstQ;
+    }
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z - rocket.radius < 0){
+        collidableList = secondQ;
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z - rocket.radius <= 0){
+        collidableList = thirdQ;
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y + rocket.radius >= 0 && rocket.self.position.z + rocket.radius > 0){
+        collidableList = fourthQ;
+    }
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z + rocket.radius >= 0){
+        collidableList = fifthQ;
+    }
+    if(rocket.self.position.x + rocket.radius >= 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z - rocket.radius < 0){
+        collidableList = sixthQ;
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z - rocket.radius <= 0){
+        collidableList = seventhQ;
+    }
+    if(rocket.self.position.x - rocket.radius < 0 && rocket.self.position.y - rocket.radius < 0 && rocket.self.position.z + rocket.radius > 0){
+        collidableList = eighthQ;
+    }
+
     
     if(left == true){
         teta += angle;
@@ -477,12 +509,38 @@ function movement(deltaTime){
             (1.2*R)*Math.sin(fi)*Math.cos(teta+angle),
             (1.2*R)*Math.cos(fi),
             (1.2*R)*Math.sin(fi)*Math.sin(teta+angle)
+        
         );
+        rocket.self.position.set(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta)
+        );
+        for (var i = 0; i < collidableList.length; i ++ ){
+            if(rocket.hasColl(collidableList[i])){
+                toRemove = collidableList[i];
+                let wanted_dist = rocket.radius+collidableList[i].radius;
+                let correction_vector = new THREE.Vector3(
+                    rocket.self.position.x-collidableList[i].self.position.x,
+                    rocket.self.position.y-collidableList[i].self.position.y,
+                    rocket.self.position.z-collidableList[i].self.position.z
+                );
+                let current_dist = Math.sqrt(
+                    Math.pow(correction_vector.x,2)+
+                    Math.pow(correction_vector.y,2)+
+                    Math.pow(correction_vector.z,2));
+                let correction_dist = wanted_dist - current_dist; 
+                teta -= correction_dist/R;
+                collidableList.splice(i,1);
+            }
+        }
         MobilePerspCamera.position.set(
             (1.8*R)*Math.sin(fi)*Math.cos(teta-Math.PI/10),
             (1.8*R)*Math.cos(fi),
             (1.8*R)*Math.sin(fi)*Math.sin(teta-Math.PI/10)
         );
+        
+
 
     }
     if(right == true){
@@ -492,6 +550,29 @@ function movement(deltaTime){
             (1.2*R)*Math.cos(fi),
             (1.2*R)*Math.sin(fi)*Math.sin(teta-angle)
         );
+        rocket.self.position.set(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta)
+        );
+        for (var i = 0; i < collidableList.length; i ++ ){
+            if(rocket.hasColl(collidableList[i])){
+                toRemove = collidableList[i];
+                let wanted_dist = rocket.radius+collidableList[i].radius;
+                let correction_vector = new THREE.Vector3(
+                    rocket.self.position.x-collidableList[i].self.position.x,
+                    rocket.self.position.y-collidableList[i].self.position.y,
+                    rocket.self.position.z-collidableList[i].self.position.z
+                );
+                let current_dist = Math.sqrt(
+                    Math.pow(correction_vector.x,2)+
+                    Math.pow(correction_vector.y,2)+
+                    Math.pow(correction_vector.z,2));
+                let correction_dist = wanted_dist - current_dist;
+                teta += correction_dist/R;
+                collidableList.splice(i,1);
+            }
+        }
         MobilePerspCamera.position.set(
             (1.8*R)*Math.sin(fi)*Math.cos(teta+Math.PI/10),
             (1.8*R)*Math.cos(fi),
@@ -500,11 +581,35 @@ function movement(deltaTime){
     }
     if(down == true){
         fi += angle;
+
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi+angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi+angle),
             (1.2*R)*Math.sin(fi+angle)*Math.sin(teta)
         );
+        rocket.self.position.set(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta)
+        );
+        for (var i = 0; i < collidableList.length; i ++ ){
+            if(rocket.hasColl(collidableList[i])){
+                toRemove = collidableList[i];
+                let wanted_dist = rocket.radius+collidableList[i].radius;
+                let correction_vector = new THREE.Vector3(
+                    rocket.self.position.x-collidableList[i].self.position.x,
+                    rocket.self.position.y-collidableList[i].self.position.y,
+                    rocket.self.position.z-collidableList[i].self.position.z
+                );
+                let current_dist = Math.sqrt(
+                    Math.pow(correction_vector.x,2)+
+                    Math.pow(correction_vector.y,2)+
+                    Math.pow(correction_vector.z,2));
+                let correction_dist = wanted_dist - current_dist;
+                fi -= correction_dist/R;
+                collidableList.splice(i,1);
+            }
+        }
         MobilePerspCamera.position.set(
             (1.8*R)*Math.sin(fi-Math.PI/10)*Math.cos(teta),
             (1.8*R)*Math.cos(fi-Math.PI/10),
@@ -513,11 +618,35 @@ function movement(deltaTime){
     }
     if(up == true){
         fi -= angle;
+
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi-angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi-angle),
             (1.2*R)*Math.sin(fi-angle)*Math.sin(teta)
         );
+        rocket.self.position.set(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta)
+        );
+        for (var i = 0; i < collidableList.length; i ++ ){
+            if(rocket.hasColl(collidableList[i])){
+                toRemove = collidableList[i];
+                let wanted_dist = rocket.radius+collidableList[i].radius;
+                let correction_vector = new THREE.Vector3(
+                    rocket.self.position.x-collidableList[i].self.position.x,
+                    rocket.self.position.y-collidableList[i].self.position.y,
+                    rocket.self.position.z-collidableList[i].self.position.z
+                );
+                let current_dist = Math.sqrt(
+                    Math.pow(correction_vector.x,2)+
+                    Math.pow(correction_vector.y,2)+
+                    Math.pow(correction_vector.z,2));
+                let correction_dist = wanted_dist - current_dist;
+                fi += correction_dist/R;
+                collidableList.splice(i,1);
+            }
+        }
         MobilePerspCamera.position.set(
             (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
             (1.8*R)*Math.cos(fi+Math.PI/10),
@@ -525,21 +654,20 @@ function movement(deltaTime){
         );
     }
     if(left == true || right == true || down == true || up == true){
-        let direction = new THREE.Vector3((1.2*R)*Math.sin(fi)*Math.cos(teta)-rocket.self.position.x,
+        /*let direction = new THREE.Vector3((1.2*R)*Math.sin(fi)*Math.cos(teta)-rocket.self.position.x,
                     (1.2*R)*Math.cos(fi)-rocket.self.position.y,
                     (1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.self.position.z);
-
-        col = false;
-
-        detectCollisions();
-
+        
         // direction.normalize();
 
-        if(col == false){        
-            rocket.self.position.x += direction.x;
-            rocket.self.position.y += direction.y;
-            rocket.self.position.z += direction.z;
-        }
+        rocket.self.position.x += direction.x;
+        rocket.self.position.y += direction.y;
+        rocket.self.position.z += direction.z;*/
+        rocket.self.position.set(
+            (1.2*R)*Math.sin(fi)*Math.cos(teta),
+            (1.2*R)*Math.cos(fi),
+            (1.2*R)*Math.sin(fi)*Math.sin(teta)
+        );
         rocket.self.lookAt(next_position);
         rocket.self.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI/2);
         /*rocket.self.position.set(
@@ -553,6 +681,14 @@ function movement(deltaTime){
             (1.8*R)*Math.cos(fi+Math.PI/10),
             (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta)
         );*/
+
+
+
+
+
+
+        
+
         MobilePerspCamera.lookAt(rocket.self.position);
 
         if(up == true && Math.floor(((fi+Math.PI/3.799)/Math.PI))%2!=0){
