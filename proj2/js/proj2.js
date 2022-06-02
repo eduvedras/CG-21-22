@@ -3,7 +3,7 @@
 //import * as THREE from 'three';
 
 var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
-var dz,cz,toRemove=null;
+var dz,cz,toRemove=null, col;
 var width=200, height=130, cameraRatio = (width/height);
 /**
  * teta = latitute
@@ -452,9 +452,10 @@ function collisions(collidableList){
                 Math.pow(correction_vector.z,2));
             let wanted_dist = rocket.radius+collidableList[i].radius;
             toRemove = collidableList[i];
-            rocket.self.translateOnAxis(correction_vector,wanted_dist-current_dist);                    
+            rocket.self.translateOnAxis(correction_vector,wanted_dist-current_dist);               
 
             collidableList.splice(i,1);
+            col = true;
         }
     }
 }
@@ -528,11 +529,17 @@ function movement(deltaTime){
                     (1.2*R)*Math.cos(fi)-rocket.self.position.y,
                     (1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.self.position.z);
 
+        col = false;
+
+        detectCollisions();
+
         // direction.normalize();
 
-        rocket.self.position.x += direction.x;
-        rocket.self.position.y += direction.y;
-        rocket.self.position.z += direction.z;
+        if(col == false){        
+            rocket.self.position.x += direction.x;
+            rocket.self.position.y += direction.y;
+            rocket.self.position.z += direction.z;
+        }
         rocket.self.lookAt(next_position);
         rocket.self.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI/2);
         /*rocket.self.position.set(
@@ -593,7 +600,7 @@ function update(){
     let deltaTime = clock.getDelta();
     clearCollisions();
     movement(deltaTime);
-    detectCollisions();
+    //detectCollisions();
 }
 
 function animate() {
