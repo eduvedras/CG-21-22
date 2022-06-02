@@ -717,7 +717,7 @@ function init() {
 function update(){
     let deltaTime = clock.getDelta();
     clearCollisions();
-    detectCollisions();
+    //detectCollisions();
     movement(deltaTime);
     
 }
