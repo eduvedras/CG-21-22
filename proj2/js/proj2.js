@@ -498,17 +498,7 @@ function movement(deltaTime){
         );
     }
     if(down == true){
-        if(left == true){
-            teta -= angle/2;
-            fi += angle/2;
-        }
-        else if(right == true){
-            teta += angle/2;
-            fi += angle/2;
-        }
-        else{
-            fi += angle;
-        }
+        fi += angle;
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi+angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi+angle),
@@ -521,17 +511,7 @@ function movement(deltaTime){
         );
     }
     if(up == true){
-        if(left == true){
-            teta -= angle/2;
-            fi -= angle/2;
-        }
-        else if(right == true){
-            teta += angle/2;
-            fi -= angle/2;
-        }
-        else{
-            fi -= angle;
-        }
+        fi -= angle;
         next_position = new THREE.Vector3(
             (1.2*R)*Math.sin(fi-angle)*Math.cos(teta),
             (1.2*R)*Math.cos(fi-angle),
