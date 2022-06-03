@@ -1,8 +1,6 @@
 /*global THREE, requestAnimationFrame, console*/
 
-//import * as THREE from 'three';
-
-var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
+var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down, scene, renderer, clock;
 var dz,cz,toRemove=null;
 var width=200, height=130, cameraRatio = (width/height);
 /**
@@ -11,8 +9,6 @@ var width=200, height=130, cameraRatio = (width/height);
  */
 var fi = 2*Math.PI*Math.random();
 var teta = 2*Math.PI*Math.random();
-var oldfi = fi;
-var oldteta = teta;
 var anglefi, angleteta;
 var firstQ = new Array();
 var secondQ = new Array();
@@ -22,15 +18,9 @@ var fifthQ = new Array();
 var sixthQ = new Array();
 var seventhQ = new Array();
 var eighthQ = new Array();
-var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27, gf,rocket;
+var gf,rocket;
 const R = 50,body_length = 3;
 var geometry, material, mesh;
-/**
- * disposição dos objetos -> não tem de estar ligados obrigatório hierarquia
- * grafo de cena -> só é obrigatório apresentar 3 objetos (aconselha se fazer para os mais dificeis)
- * movimentar -> d e c para mexer no eixo z
- * submeter no moodle
- */
 
 class collObject extends THREE.Object3D {
 
@@ -654,15 +644,6 @@ function movement(deltaTime){
         );
     }
     if(left == true || right == true || down == true || up == true){
-        /*let direction = new THREE.Vector3((1.2*R)*Math.sin(fi)*Math.cos(teta)-rocket.self.position.x,
-                    (1.2*R)*Math.cos(fi)-rocket.self.position.y,
-                    (1.2*R)*Math.sin(fi)*Math.sin(teta)-rocket.self.position.z);
-        
-        // direction.normalize();
-
-        rocket.self.position.x += direction.x;
-        rocket.self.position.y += direction.y;
-        rocket.self.position.z += direction.z;*/
         rocket.self.position.set(
             (1.2*R)*Math.sin(fi)*Math.cos(teta),
             (1.2*R)*Math.cos(fi),
@@ -717,7 +698,6 @@ function init() {
 function update(){
     let deltaTime = clock.getDelta();
     clearCollisions();
-    //detectCollisions();
     movement(deltaTime);
     
 }
