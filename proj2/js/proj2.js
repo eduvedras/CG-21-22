@@ -653,8 +653,10 @@ function movement(deltaTime){
         rocket.self.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI/2);
         
         MobilePerspCamera.lookAt(rocket.self.position);
-
-        if(up == true && Math.floor(((fi+Math.PI/3.799)/Math.PI))%2!=0){
+        
+        
+        if(up == true && Math.floor(((fi+Math.PI/3.799
+        )/Math.PI))%2!=0){
             MobilePerspCamera.rotateZ(Math.PI);
         }
         if(down == true && Math.floor(((fi-Math.PI/3.799)/Math.PI))%2!=0){

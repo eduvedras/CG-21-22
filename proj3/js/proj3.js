@@ -5,7 +5,7 @@
 var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
 var dz,cz,toRemove=null;
 var width=200, height=130, cameraRatio = (width/height);
-var first_origami;
+var first_origami, second_origami;
 /**
  * teta = latitute
  * fi = longitude
@@ -23,7 +23,7 @@ var fifthQ = new Array();
 var sixthQ = new Array();
 var seventhQ = new Array();
 var eighthQ = new Array();
-var g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27, gf,rocket;
+var gcubes, gorigamis, gf;
 const R = 50,body_length = 3;
 var geometry, material, mesh;
 
@@ -50,8 +50,21 @@ function createSphere(x, y, z, r, g) {
     g.add(sphere);
 }
 
-function distance(pos1, pos2) {
-    return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y -pos2.y) ** 2 + (pos1.z - pos2.z) ** 2);
+function createCube(x, y, z, width, height, depth, g) {
+    'use strict';
+
+    var cube = new THREE.Object3D();
+    
+    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+
+    geometry = new THREE.BoxGeometry(width, height, depth);
+    mesh = new THREE.Mesh(geometry, material);
+    
+    cube.add(mesh);
+
+    cube.position.set(x,y,z);
+
+    g.add(cube);
 }
 
 
@@ -63,16 +76,26 @@ function createScene() {
     
     scene.add(new THREE.AxesHelper(10));
 
+    gcubes = new THREE.Object3D();
+    gorigamis = new THREE.Object3D();
     gf = new THREE.Object3D();
-    material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
+    createCube(0,0,0,20,30,20,gcubes);
+    createCube(0,-5,15,20,20,10,gcubes);
+    createCube(0,-10,25,20,10,10,gcubes);
+
+    gcubes.position.set(0,-15,0);
+
+    gcubes.scale.set(2,1,1);
     /**
      * Acho que para fazermos os origamis é suposto usarmos esta bufferGeometry 
      * (é aquela malha de triangulos que eles falam)
      */
      var geometry = new THREE.BufferGeometry();
 
-
+     const texture = new THREE.TextureLoader();
+     const p1 = texture.load("./padrao2.jpg"); 
+     material = new THREE.MeshStandardMaterial({ map: p1 });
 
     /**
      * Isto vão ser os vertices dos triangulos que vamos criar.
@@ -110,7 +133,97 @@ function createScene() {
     ] );
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
     first_origami = new THREE.Mesh( geometry, material );
-    gf.add(first_origami);
+    first_origami.position.set(-12,-5,0);
+    gorigamis.add(first_origami);
+
+    var geometry2 = new THREE.BufferGeometry();
+
+    var vertices2 = new Float32Array( [
+
+        /**Triangulo da cima direita */
+        0,0,0,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0,4.7,0,
+        /**--------- */
+
+        /**Triangulo da cima esquerda */
+        0,0,0,
+        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
+        0,4.7,0,
+        /**--------- */
+
+        /**Triangulo da cima direita */
+        0,4.7,0,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0,0,0,
+        /**--------- */
+
+        /**Triangulo da cima esquerda */
+        0,4.7,0,
+        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
+        0,0,0,
+        /**--------- */
+
+
+
+        /**Triangulo da meio direita */
+        0,0,0,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
+        /**--------- */
+
+        /**Triangulo da meio esquerda */
+        0,0,0,
+        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
+        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
+        /**--------- */
+
+        /**Triangulo da meio direita */
+        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0,0,0,
+        /**--------- */
+
+        /**Triangulo da meio esquerda */
+        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
+        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
+        0,0,0,
+        /**--------- */
+
+
+        /**Triangulo da baixo direita */
+        0,0,0,
+        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
+        0,-15.3,0,
+        /**--------- */
+
+        /**Triangulo da baixo esquerda */
+        0,0,0,
+        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
+        0,-15.3,0,
+        /**--------- */
+
+        /**Triangulo da baixo direita */
+        0,-15.3,0,
+        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
+        0,0,0,
+        /**--------- */
+
+        /**Triangulo da baixo esquerda */
+        0,-15.3,0,
+        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
+        0,0,0,
+        /**--------- */
+
+    ] );
+    geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
+    second_origami = new THREE.Mesh( geometry2, material );
+    gorigamis.add(second_origami);
+
+    gorigamis.position.set(0,17,0);
+
+    gf.add(gcubes);
+    gf.add(gorigamis);
 
     scene.add(gf);
 }
@@ -121,9 +234,9 @@ function createCamera() {
                                             window.innerWidth / window.innerHeight,
                                             1,
                                             1000);
-    FixedPerspCamera.position.x = 70;
-    FixedPerspCamera.position.y = 70;
-    FixedPerspCamera.position.z = 70;
+    FixedPerspCamera.position.x = 50;
+    FixedPerspCamera.position.y = 50;
+    FixedPerspCamera.position.z = 50;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
@@ -245,24 +358,24 @@ function movement(deltaTime){
     const angle = deltaTime * 4;
     const vel = deltaTime * 8;
     if(left == true){
-        first_origami.rotateY(-angle);
+        second_origami.rotateY(-angle);
     }
     if(right == true){
-        first_origami.rotateY(angle);
+        second_origami.rotateY(angle);
     }
 
 }
 
 function render() {
     'use strict';
-    if(cameraInUse == 1)
+    if(cameraInUse == 2)
         renderer.render(scene, FrontalCamera);
-    else if(cameraInUse == 2)
+    else if(cameraInUse == 1)
         renderer.render(scene, FixedPerspCamera);
     else if(cameraInUse == 3)
         renderer.render(scene, MobilePerspCamera);
     else
-        renderer.render(scene, FrontalCamera);
+        renderer.render(scene, FixedPerspCamera);
 }
 
 function init() {
