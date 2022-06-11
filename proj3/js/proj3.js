@@ -116,9 +116,11 @@ function createScene() {
      */
     var geometry = new THREE.BufferGeometry();
 
-    const texture = new THREE.TextureLoader();
-    const p1 = texture.load('js/padrao1.png'); 
-    material = new THREE.MeshBasicMaterial({ map: p1 });
+    //const texture = new THREE.TextureLoader();
+    //const p1 = texture.load("js/padrao2.jpg"); 
+    material = new THREE.MeshPhongMaterial({    color: "white",
+                                                //map: new THREE.TextureLoader().load("js/padrao2.jpg"),
+                                                side: THREE.DoubleSide, });
     //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
     /**
@@ -141,21 +143,9 @@ function createScene() {
         0,10,0,
         /**--------- */
 
-        /**Agora os mesmos triangulos mas declarados ao contrário
-         * para se poder ver durante a rotação:
-         */
-         0,10,0,
-         Math.cos(Math.PI/4)*10,0,Math.sin(Math.PI/4)*10,
-         0,-10,0,
-
-        0,10,0,
-        0,-10,0,
-        -Math.cos(Math.PI/4)*10,0,Math.sin(Math.PI/4)*10
-
-        /* (btw, meti rotação nas setas esq e dir só para dar para ver)*/
-        /**--------- */
     ] );
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    geometry.computeVertexNormals();
     first_origami = new THREE.Mesh( geometry, material );
     first_origami.position.set(-12,-5,0);
     gorigamis.add(first_origami);
@@ -176,20 +166,6 @@ function createScene() {
         0,4.7,0,
         /**--------- */
 
-        /**Triangulo da cima direita */
-        0,4.7,0,
-        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
-        0,0,0,
-        /**--------- */
-
-        /**Triangulo da cima esquerda */
-        0,4.7,0,
-        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
-        0,0,0,
-        /**--------- */
-
-
-
         /**Triangulo da meio direita */
         0,0,0,
         Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
@@ -202,19 +178,6 @@ function createScene() {
         -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
         /**--------- */
 
-        /**Triangulo da meio direita */
-        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
-        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
-        0,0,0,
-        /**--------- */
-
-        /**Triangulo da meio esquerda */
-        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
-        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
-        0,0,0,
-        /**--------- */
-
-
         /**Triangulo da baixo direita */
         0,0,0,
         Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
@@ -225,22 +188,11 @@ function createScene() {
         0,0,0,
         -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
         0,-15.3,0,
-        /**--------- */
-
-        /**Triangulo da baixo direita */
-        0,-15.3,0,
-        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
-        0,0,0,
-        /**--------- */
-
-        /**Triangulo da baixo esquerda */
-        0,-15.3,0,
-        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
-        0,0,0,
         /**--------- */
 
     ] );
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
+    geometry2.computeVertexNormals();
     second_origami = new THREE.Mesh( geometry2, material );
     gorigamis.add(second_origami);
 
@@ -257,10 +209,13 @@ function createScene() {
     scene.add(gf);
 
     directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-    directionalLight.position.set(100,100,50);
+    directionalLight.position.set(50,50,25);
     directionalLight.visible = true;
 
+    //scene.add(new THREE.AmbientLight(0xffffff,1));
+    var directionHelper = new THREE.DirectionalLightHelper(directionalLight,3);
     scene.add(directionalLight);
+    scene.add(directionHelper);
 }
 
 function createCamera() {
@@ -457,7 +412,8 @@ function movement(deltaTime){
     if(right2 == true){
         second_origami.rotateY(angle);
     }
-
+    //geometry.updateProjectionMatrix();
+    //geometry2.updateProjectionMatrix();
 }
 
 function lights(){
