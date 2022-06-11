@@ -117,9 +117,17 @@ function createScene() {
 
     //const texture = new THREE.TextureLoader();
     //const p1 = texture.load("js/padrao2.jpg"); 
+    
+    /**
+     * padrão 1: https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png
+     * padrão 2: https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg
+     * padrão 3: https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg
+     */
+
     material = new THREE.MeshPhongMaterial({    color: "white",
-                                                //map: new THREE.TextureLoader().load("js/padrao2.jpg"),
+                                                map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                                                 side: THREE.DoubleSide, });
+    
     //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
     /**
@@ -193,6 +201,12 @@ function createScene() {
     ] );
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
     geometry2.computeVertexNormals();
+    
+    material = new THREE.MeshPhongMaterial({    color: "white",
+                                                map: new THREE.TextureLoader().load("https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg"),
+                                                side: THREE.DoubleSide, });
+    
+    
     second_origami = new THREE.Mesh( geometry2, material );
     second_origami.castShadow = true;
     gorigamis.add(second_origami);
