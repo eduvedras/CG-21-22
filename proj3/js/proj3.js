@@ -2,69 +2,85 @@
 
 //import * as THREE from 'three';
 
-var FixedPerspCamera, FrontalCamera, MobilePerspCamera, cameraInUse, v1R, v1L, v2R, v2L, v3R, v3L, left, up, right, down,front,back, scene, renderer, clock;
-var dz,cz,toRemove=null;
+var FixedPerspCamera, FrontalCamera, isFixedPerspCamera = true, isFrontalCamera = false, scene, renderer, clock;
 var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami;
-/**
- * teta = latitute
- * fi = longitude
- */
-var fi = 2*Math.PI*Math.random();
-var teta = 2*Math.PI*Math.random();
-var oldfi = fi;
-var oldteta = teta;
-var anglefi, angleteta;
-var firstQ = new Array();
-var secondQ = new Array();
-var thirdQ = new Array();
-var fourthQ = new Array();
-var fifthQ = new Array();
-var sixthQ = new Array();
-var seventhQ = new Array();
-var eighthQ = new Array();
-var gcubes, gorigamis, gf;
-const R = 50,body_length = 3;
+var left1, left2, left3, right1, right2, right3, light = true;
+var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
+
+var gcubes, gorigamis, gf, gpause;
 var geometry, material, mesh;
-
-
-function createSphere(x, y, z, r, g) {
-    'use strict';
-    
-    var sphere = new THREE.Object3D();
-    sphere.userData = { jumping: true, step: 0 };
-
-    const radius = r;  // ui: radius
-    const widthSegments = 12;  // ui: widthSegments
-    const heightSegments = 8;  // ui: heightSegments
-    
-    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-    geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
-    mesh = new THREE.Mesh(geometry, material);
-    
-    sphere.add(mesh);
-    sphere.position.set(x, y, z);
-    
-    scene.add(sphere);
-
-    g.add(sphere);
-}
 
 function createCube(x, y, z, width, height, depth, g) {
     'use strict';
 
     var cube = new THREE.Object3D();
     
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    var materialC = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
 
-    geometry = new THREE.BoxGeometry(width, height, depth);
-    mesh = new THREE.Mesh(geometry, material);
+    var geometryC = new THREE.BoxGeometry(width, height, depth);
+    var meshC = new THREE.Mesh(geometryC, materialC);
     
-    cube.add(mesh);
+    cube.add(meshC);
 
     cube.position.set(x,y,z);
 
     g.add(cube);
+}
+
+function spotlight(x,y,z,origami){
+    var hol = new THREE.Object3D();
+    const Hlight = new THREE.SpotLight( 0xffffff );
+    Hlight.position.set(x,y,z);
+
+    /*spotLight.castShadow = true;
+
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+
+    spotLight.shadow.camera.near = 500;
+    spotLight.shadow.camera.far = 4000;
+    spotLight.shadow.camera.fov = 30;*/
+
+    Hlight.target = origami;
+        
+    var sphere = new THREE.Object3D();
+
+    const radius = 1;  // ui: radius
+    const widthSegments = 12;  // ui: widthSegments
+    const heightSegments = 8;  // ui: heightSegments
+    
+    var materialS = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+    var meshS = new THREE.Mesh(geometryS, materialS);
+    
+    sphere.add(meshS);
+    
+    hol.add(sphere);
+
+    var cone = new THREE.Object3D();
+    
+    materialS = new THREE.MeshBasicMaterial({ color: 0x1260cc, wireframe: true });
+
+    const height = 1;  // ui: height
+    const radialSegments = 16;  // ui: radialSegments
+    geometryS = new THREE.ConeGeometry(radius, height, radialSegments);
+   
+    meshS = new THREE.Mesh(geometryS, materialS);
+    cone.add(meshS);
+
+    cone.rotateX(3*Math.PI/4);
+    cone.position.set(0,-0.8,0.8);
+
+    hol.add(cone);
+
+    hol.position.set(x,y + 1,z - 1);
+
+    hol.add(Hlight);
+
+    gf.add( hol );
+
+    return Hlight;
 }
 
 
@@ -79,6 +95,13 @@ function createScene() {
     gcubes = new THREE.Object3D();
     gorigamis = new THREE.Object3D();
     gf = new THREE.Object3D();
+    gpause = new THREE.Object3D();
+
+    //Aqui temos q inserir o objeto de pausa
+    createCube(20,20,20,10,10,10,gpause);
+    gpause.visible = false;
+
+    gf.add(gpause);
 
     createCube(0,0,0,20,30,20,gcubes);
     createCube(0,-5,15,20,20,10,gcubes);
@@ -91,11 +114,12 @@ function createScene() {
      * Acho que para fazermos os origamis é suposto usarmos esta bufferGeometry 
      * (é aquela malha de triangulos que eles falam)
      */
-     var geometry = new THREE.BufferGeometry();
+    var geometry = new THREE.BufferGeometry();
 
-     const texture = new THREE.TextureLoader();
-     const p1 = texture.load("./padrao2.jpg"); 
-     material = new THREE.MeshStandardMaterial({ map: p1 });
+    const texture = new THREE.TextureLoader();
+    const p1 = texture.load('js/padrao1.png'); 
+    material = new THREE.MeshBasicMaterial({ map: p1 });
+    //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
     /**
      * Isto vão ser os vertices dos triangulos que vamos criar.
@@ -225,7 +249,18 @@ function createScene() {
     gf.add(gcubes);
     gf.add(gorigamis);
 
+    spotLight1 = spotlight(-12,0,10,first_origami);
+    spotLight1.visible = true;
+    spotLight2 = spotlight(0,0,10,second_origami);
+    spotLight2.visible = true;
+
     scene.add(gf);
+
+    directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    directionalLight.position.set(100,100,50);
+    directionalLight.visible = true;
+
+    scene.add(directionalLight);
 }
 
 function createCamera() {
@@ -263,14 +298,6 @@ function createCamera() {
     FrontalCamera.position.z = 100;
     FrontalCamera.lookAt(scene.position);
 
-    MobilePerspCamera = new THREE.PerspectiveCamera(70,
-                                            window.innerWidth / window.innerHeight,
-                                            1,
-                                            1000);
-    MobilePerspCamera.position.set(
-        (1.8*R)*Math.sin(fi+Math.PI/10)*Math.cos(teta),
-        (1.8*R)*Math.cos(fi+Math.PI/10),
-        (1.8*R)*Math.sin(fi+Math.PI/10)*Math.sin(teta));
 }
 
 function onKeyDown(e) {
@@ -278,25 +305,78 @@ function onKeyDown(e) {
     
     switch (e.keyCode) {
     case 49: //1
-        cameraInUse = 1;
+        isFixedPerspCamera = true;
+        isFrontalCamera = false;
         break;
     case 50: //2
-        cameraInUse = 2;
+        isFrontalCamera = true;
+        isFixedPerspCamera = false;
         break;
-    case 51: //3
-        cameraInUse = 3;
+    case 81: //Q
+    case 113: //q
+        left1 = true;
         break;
-    case 37: //left arrow
-        left = true;
+    case 87: //W
+    case 119: //w
+        right1 = true;
         break;
-    case 38: //up arrow
-        up = true;
+    case 69: //E
+    case 101: //e
+        left2 = true;
         break;
-    case 39: //right arrow
-        right = true;
+    case 82: //R
+    case 114: //r
+        if(pause == true){
+            reset();
+            break;
+        }
+        right2 = true;
         break;
-    case 40: //down arrow
-        down = true;
+    case 84: //T
+    case 116: //t
+        left3 = true;
+        break;
+    case 89: //Y
+    case 121: //y
+        right3 = true;
+        break;
+    case 68: //D
+    case 100: //d
+        if(light == false)
+            light = true;
+        else
+            light = false;
+        break;
+    case 90: //Z
+    case 122: //z
+        if(lightH1 == false)
+            lightH1 = true;
+        else
+            lightH1 = false;
+        break;
+    case 88: //X
+    case 120: //x
+        if(lightH2 == false)
+            lightH2 = true;
+        else
+            lightH2 = false;
+        break;
+    case 67: //C
+    case 99: //c
+        if(lightH3 == false)
+            lightH3 = true;
+        else
+            lightH3 = false;
+        break;
+    case 83: //S
+        if(pause == false){
+            pause = true;
+            gpause.visible = true;
+        }
+        else{
+            pause = false;
+            gpause.visible = false;
+        }
         break;
     }
 }
@@ -305,18 +385,30 @@ function onKeyUp(e) {
     'use strict';
     
     switch (e.keyCode) {
-    case 37: //left arrow
-        left = false;
-        break;
-    case 38: //up arrow
-        up = false;
-        break;
-    case 39: //right arrow
-        right = false;
-        break;
-    case 40: //down arrow
-        down = false;
-        break;
+        case 81: //Q
+        case 113: //q
+            left1 = false;
+            break;
+        case 87: //W
+        case 119: //w
+            right1 = false;
+            break;
+        case 69: //E
+        case 101: //e
+            left2 = false;
+            break;
+        case 82: //R
+        case 114: //r
+            right2 = false;
+            break;
+        case 84: //T
+        case 116: //t
+            left3 = false;
+            break;
+        case 89: //Y
+        case 121: //y
+            right3 = false;
+            break;
     } 
     
 }
@@ -329,8 +421,6 @@ function onResize() {
     if (window.innerHeight > 0 && window.innerWidth > 0) {
         FixedPerspCamera.aspect = window.innerWidth / window.innerHeight;
         FixedPerspCamera.updateProjectionMatrix();
-        MobilePerspCamera.aspect = window.innerWidth / window.innerHeight;
-        MobilePerspCamera.updateProjectionMatrix();
         
         var newAspectRatio = window.innerWidth/window.innerHeight;
 		if (newAspectRatio > cameraRatio){
@@ -352,29 +442,68 @@ function onResize() {
 
 }
 
-
-
 function movement(deltaTime){
     const angle = deltaTime * 4;
     const vel = deltaTime * 8;
-    if(left == true){
+    if(left1 == true){
+        first_origami.rotateY(-angle);
+    }
+    if(right1 == true){
+        first_origami.rotateY(angle);
+    }
+    if(left2 == true){
         second_origami.rotateY(-angle);
     }
-    if(right == true){
+    if(right2 == true){
         second_origami.rotateY(angle);
     }
 
 }
 
+function lights(){
+    if(light == true){
+        directionalLight.visible = true;
+    }
+    if(light == false){
+        directionalLight.visible = false;
+    }
+    if(lightH1 == true){
+        spotLight1.visible = true;
+    }
+    if(lightH1 == false){
+        spotLight1.visible = false;
+    }
+    if(lightH2 == true){
+        spotLight2.visible = true;
+    }
+    if(lightH2 == false){
+        spotLight2.visible = false;
+    }
+    /*if(lightH3 == true){
+        spotLight3.visible = true;
+    }
+    if(lightH3 == false){
+        spotLight3.visible = false;
+    }*/
+}
+
+function reset(){
+    first_origami.rotation.set(0,0,0);
+    second_origami.rotation.set(0,0,0);
+    //third_origami
+    lightH1 = true;
+    lightH2 = true;
+    lightH3 = true;
+    light = true;
+    gpause.visible = false;
+    pause = false;
+}
+
 function render() {
     'use strict';
-    if(cameraInUse == 2)
+    if(isFrontalCamera)
         renderer.render(scene, FrontalCamera);
-    else if(cameraInUse == 1)
-        renderer.render(scene, FixedPerspCamera);
-    else if(cameraInUse == 3)
-        renderer.render(scene, MobilePerspCamera);
-    else
+    if(isFixedPerspCamera)
         renderer.render(scene, FixedPerspCamera);
 }
 
@@ -397,15 +526,22 @@ function init() {
     window.addEventListener("resize", onResize);
 }
 
-function animate() {
-    'use strict';
-
+function update(){
     let deltaTime = clock.getDelta();
 
+    if(pause == true){
+        return;
+    }
+    else{
+        lights();
+        movement(deltaTime);
+    }
 
-    movement(deltaTime);
+}
 
-    
+function animate() {
+    'use strict';
+    update();
     render();
     
     requestAnimationFrame(animate);
