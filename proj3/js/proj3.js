@@ -21,6 +21,8 @@ function createCube(x, y, z, width, height, depth, g) {
 
     var geometryC = new THREE.BoxGeometry(width, height, depth);
     var meshC = new THREE.Mesh(geometryC, materialC);
+
+    meshC.receiveShadow = true;
     
     cube.add(meshC);
 
@@ -32,15 +34,6 @@ function createCube(x, y, z, width, height, depth, g) {
 function spotlight(x,y,z,origami){
     var hol = new THREE.Object3D();
     var Hlight = new THREE.SpotLight( 0xffffff );
-
-    /*spotLight.castShadow = true;
-
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
-
-    spotLight.shadow.camera.near = 500;
-    spotLight.shadow.camera.far = 4000;
-    spotLight.shadow.camera.fov = 30;*/
         
     var sphere = new THREE.Object3D();
 
@@ -51,6 +44,9 @@ function spotlight(x,y,z,origami){
     var materialS = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
     var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
     var meshS = new THREE.Mesh(geometryS, materialS);
+
+    //meshS.castShadow = true;
+    //meshS.receiveShadow = true;
     
     sphere.add(meshS);
     
@@ -75,6 +71,7 @@ function spotlight(x,y,z,origami){
     hol.position.set(x,y + 1,z - 1);
 
     Hlight.position.set(x,y+1,z-1);
+    //
     
     Hlight.target = origami;
     Hlight.target.updateMatrixWorld();
@@ -151,6 +148,7 @@ function createScene() {
     geometry.computeVertexNormals();
     first_origami = new THREE.Mesh( geometry, material );
     first_origami.position.set(-12,-5,0);
+    first_origami.castShadow = true;
     gorigamis.add(first_origami);
 
     geometry2 = new THREE.BufferGeometry();
@@ -197,6 +195,7 @@ function createScene() {
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
     geometry2.computeVertexNormals();
     second_origami = new THREE.Mesh( geometry2, material );
+    second_origami.castShadow = true;
     gorigamis.add(second_origami);
 
     gorigamis.position.set(0,17,0);
@@ -213,7 +212,13 @@ function createScene() {
 
     directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight.position.set(50,50,25);
+    directionalLight.castShadow = true;
     directionalLight.visible = true;
+
+    directionalLight.shadow.camera.left = -15;
+    directionalLight.shadow.camera.right = 15;
+    directionalLight.shadow.camera.top = 18;
+    directionalLight.shadow.camera.bottom = -15;
 
     var directionHelper = new THREE.DirectionalLightHelper(directionalLight,3);
     scene.add(directionalLight);
@@ -222,6 +227,8 @@ function createScene() {
     scene.add(directionHelper1);
     var directionHelper2 = new THREE.DirectionalLightHelper(spotLight2,3);
     scene.add(directionHelper2);
+    var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
+    scene.add( helperS );
 }
 
 function createCamera() {
@@ -230,9 +237,9 @@ function createCamera() {
                                             window.innerWidth / window.innerHeight,
                                             1,
                                             1000);
-    FixedPerspCamera.position.x = 50;
+    FixedPerspCamera.position.x = 10;
     FixedPerspCamera.position.y = 50;
-    FixedPerspCamera.position.z = 25;
+    FixedPerspCamera.position.z = 0;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
@@ -472,6 +479,7 @@ function init() {
     renderer = new THREE.WebGLRenderer({
         antialias: true
     });
+    renderer.shadowMap.enabled = true;
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
