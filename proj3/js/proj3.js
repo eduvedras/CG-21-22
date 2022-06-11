@@ -41,12 +41,12 @@ function spotlight(x,y,z,origami){
     const widthSegments = 12;  // ui: widthSegments
     const heightSegments = 8;  // ui: heightSegments
     
-    var materialS = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var materialS = new THREE.MeshPhongMaterial({ color: 0xff0000});
     var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
     var meshS = new THREE.Mesh(geometryS, materialS);
 
-    //meshS.castShadow = true;
-    //meshS.receiveShadow = true;
+    meshS.castShadow = true;
+    meshS.receiveShadow = true;
     
     sphere.add(meshS);
     
@@ -54,7 +54,7 @@ function spotlight(x,y,z,origami){
 
     var cone = new THREE.Object3D();
     
-    materialS = new THREE.MeshBasicMaterial({ color: 0x1260cc, wireframe: true });
+    materialS = new THREE.MeshPhongMaterial({ color: 0x1260cc});
 
     const height = 1;  // ui: height
     const radialSegments = 16;  // ui: radialSegments
@@ -71,7 +71,6 @@ function spotlight(x,y,z,origami){
     hol.position.set(x,y + 1,z - 1);
 
     Hlight.position.set(x,y+1,z-1);
-    //
     
     Hlight.target = origami;
     Hlight.target.updateMatrixWorld();
@@ -205,8 +204,11 @@ function createScene() {
 
     spotLight1 = spotlight(-12,-17,14.5,first_origami);
     spotLight1.visible = true;
+    spotLight1.castShadow = true;
     spotLight2 = spotlight(0,-17,14.5,second_origami);
     spotLight2.visible = true;
+    spotLight2.castShadow = true;
+
 
     scene.add(gf);
 
@@ -215,7 +217,7 @@ function createScene() {
     directionalLight.castShadow = true;
     directionalLight.visible = true;
 
-    directionalLight.shadow.camera.left = -15;
+    directionalLight.shadow.camera.left = -20;
     directionalLight.shadow.camera.right = 15;
     directionalLight.shadow.camera.top = 18;
     directionalLight.shadow.camera.bottom = -15;
@@ -230,8 +232,12 @@ function createScene() {
     scene.add(directionHelper1);
     var directionHelper2 = new THREE.DirectionalLightHelper(spotLight2,3);
     scene.add(directionHelper2);
-    var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
-    scene.add( helperS );
+    //var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
+    //scene.add( helperS );
+    //var helperS1 = new THREE.CameraHelper( spotLight1.shadow.camera );
+    //scene.add( helperS1 );
+    var helperS2 = new THREE.CameraHelper( spotLight2.shadow.camera );
+    scene.add( helperS2 );
 }
 
 function createCamera() {
@@ -483,6 +489,7 @@ function init() {
         antialias: true
     });
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
