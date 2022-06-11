@@ -220,6 +220,9 @@ function createScene() {
     directionalLight.shadow.camera.top = 18;
     directionalLight.shadow.camera.bottom = -15;
 
+    directionalLight.shadow.mapSize.width = 1000;
+    directionalLight.shadow.mapSize.height = 1000;
+
     var directionHelper = new THREE.DirectionalLightHelper(directionalLight,3);
     scene.add(directionalLight);
     scene.add(directionHelper);
