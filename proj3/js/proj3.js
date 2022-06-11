@@ -7,6 +7,7 @@ var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
+var geometry, geometry2;
 
 var gcubes, gorigamis, gf, gpause;
 var geometry, material, mesh;
@@ -16,7 +17,7 @@ function createCube(x, y, z, width, height, depth, g) {
 
     var cube = new THREE.Object3D();
     
-    var materialC = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    var materialC = new THREE.MeshLambertMaterial({ color: 0x00ff00,});
 
     var geometryC = new THREE.BoxGeometry(width, height, depth);
     var meshC = new THREE.Mesh(geometryC, materialC);
@@ -30,8 +31,7 @@ function createCube(x, y, z, width, height, depth, g) {
 
 function spotlight(x,y,z,origami){
     var hol = new THREE.Object3D();
-    const Hlight = new THREE.SpotLight( 0xffffff );
-    Hlight.position.set(x,y,z);
+    var Hlight = new THREE.SpotLight( 0xffffff );
 
     /*spotLight.castShadow = true;
 
@@ -41,8 +41,6 @@ function spotlight(x,y,z,origami){
     spotLight.shadow.camera.near = 500;
     spotLight.shadow.camera.far = 4000;
     spotLight.shadow.camera.fov = 30;*/
-
-    Hlight.target = origami;
         
     var sphere = new THREE.Object3D();
 
@@ -76,9 +74,14 @@ function spotlight(x,y,z,origami){
 
     hol.position.set(x,y + 1,z - 1);
 
-    hol.add(Hlight);
+    Hlight.position.set(x,y+1,z-1);
+    
+    Hlight.target = origami;
+    Hlight.target.updateMatrixWorld();
 
-    gf.add( hol );
+    gorigamis.add( Hlight );
+
+    gorigamis.add(hol);
 
     return Hlight;
 }
@@ -103,9 +106,9 @@ function createScene() {
 
     gf.add(gpause);
 
-    createCube(0,0,0,20,30,20,gcubes);
-    createCube(0,-5,15,20,20,10,gcubes);
-    createCube(0,-10,25,20,10,10,gcubes);
+    createCube(0,0,0,20,30,30,gcubes);
+    createCube(0,-5,20,20,20,10,gcubes);
+    createCube(0,-10,30,20,10,10,gcubes);
 
     gcubes.position.set(0,-15,0);
 
@@ -114,7 +117,7 @@ function createScene() {
      * Acho que para fazermos os origamis é suposto usarmos esta bufferGeometry 
      * (é aquela malha de triangulos que eles falam)
      */
-    var geometry = new THREE.BufferGeometry();
+    geometry = new THREE.BufferGeometry();
 
     //const texture = new THREE.TextureLoader();
     //const p1 = texture.load("js/padrao2.jpg"); 
@@ -150,7 +153,7 @@ function createScene() {
     first_origami.position.set(-12,-5,0);
     gorigamis.add(first_origami);
 
-    var geometry2 = new THREE.BufferGeometry();
+    geometry2 = new THREE.BufferGeometry();
 
     var vertices2 = new Float32Array( [
 
@@ -201,21 +204,24 @@ function createScene() {
     gf.add(gcubes);
     gf.add(gorigamis);
 
-    spotLight1 = spotlight(-12,0,10,first_origami);
+    spotLight1 = spotlight(-12,-17,14.5,first_origami);
     spotLight1.visible = true;
-    spotLight2 = spotlight(0,0,10,second_origami);
+    spotLight2 = spotlight(0,-17,14.5,second_origami);
     spotLight2.visible = true;
 
     scene.add(gf);
 
-    directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight.position.set(50,50,25);
     directionalLight.visible = true;
 
-    //scene.add(new THREE.AmbientLight(0xffffff,1));
     var directionHelper = new THREE.DirectionalLightHelper(directionalLight,3);
     scene.add(directionalLight);
     scene.add(directionHelper);
+    var directionHelper1 = new THREE.DirectionalLightHelper(spotLight1,3);
+    scene.add(directionHelper1);
+    var directionHelper2 = new THREE.DirectionalLightHelper(spotLight2,3);
+    scene.add(directionHelper2);
 }
 
 function createCamera() {
@@ -226,7 +232,7 @@ function createCamera() {
                                             1000);
     FixedPerspCamera.position.x = 50;
     FixedPerspCamera.position.y = 50;
-    FixedPerspCamera.position.z = 50;
+    FixedPerspCamera.position.z = 25;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
@@ -412,8 +418,6 @@ function movement(deltaTime){
     if(right2 == true){
         second_origami.rotateY(angle);
     }
-    //geometry.updateProjectionMatrix();
-    //geometry2.updateProjectionMatrix();
 }
 
 function lights(){
