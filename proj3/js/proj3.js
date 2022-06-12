@@ -4,10 +4,10 @@
 
 var FixedPerspCamera, FrontalCamera, isFixedPerspCamera = true, isFrontalCamera = false, scene, renderer, clock;
 var width=200, height=130, cameraRatio = (width/height);
-var first_origami, second_origami;
+var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
-var geometry, geometry2;
+var geometry2, geometry3, materialList;
 
 var gcubes, gorigamis, gf, gpause;
 var geometry, material, mesh;
@@ -45,8 +45,8 @@ function spotlight(x,y,z,origami){
     var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
     var meshS = new THREE.Mesh(geometryS, materialS);
 
-    meshS.castShadow = true;
-    meshS.receiveShadow = true;
+    //meshS.castShadow = true;
+    //meshS.receiveShadow = true;
     
     sphere.add(meshS);
     
@@ -70,7 +70,7 @@ function spotlight(x,y,z,origami){
 
     hol.position.set(x,y + 1,z - 1);
 
-    Hlight.position.set(x,y+1,z-1);
+    Hlight.position.set(x,y+2,z-1);
     
     Hlight.target = origami;
     Hlight.target.updateMatrixWorld();
@@ -102,9 +102,9 @@ function createScene() {
 
     gf.add(gpause);
 
-    createCube(0,0,0,20,30,30,gcubes);
-    createCube(0,-5,20,20,20,10,gcubes);
-    createCube(0,-10,30,20,10,10,gcubes);
+    createCube(0,0,0,20,30,50,gcubes);
+    createCube(0,-5,30,20,20,10,gcubes);
+    createCube(0,-10,40,20,10,10,gcubes);
 
     gcubes.position.set(0,-15,0);
 
@@ -124,9 +124,17 @@ function createScene() {
      * padrão 3: https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg
      */
 
-    material = new THREE.MeshPhongMaterial({    color: "white",
-                                                map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
-                                                side: THREE.DoubleSide, });
+    materialList = [new THREE.MeshPhongMaterial({    
+                            color: "white",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide, }),
+                    new THREE.MeshLambertMaterial({
+                            color: "white",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide,
+                    })]
+
+    material = materialList[0];
     
     //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
@@ -163,65 +171,185 @@ function createScene() {
     var vertices2 = new Float32Array( [
 
         /**Triangulo da cima direita */
-        0,0,0,
+        0,-15.3,0,
         Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
         0,4.7,0,
         /**--------- */
 
         /**Triangulo da cima esquerda */
-        0,0,0,
+        0,-15.3,0,
         -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
         0,4.7,0,
         /**--------- */
 
         /**Triangulo da meio direita */
-        0,0,0,
+        //0,0,0,
+        0.22,0,-0.2,
         Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
-        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
+        0,-15.3,0,
         /**--------- */
 
         /**Triangulo da meio esquerda */
-        0,0,0,
+        0.22,0,0.2,
         -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
-        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
+        0,-15.3,0,
         /**--------- */
 
         /**Triangulo da baixo direita */
-        0,0,0,
-        Math.cos(Math.PI/4)*2.8,-1.2,Math.sin(Math.PI/4)*2.8,
+        0.22,0,-0.2,
+        Math.cos(Math.PI/4.5)*2.8,-1.2,Math.sin(Math.PI/4.5)*2.8,
         0,-15.3,0,
         /**--------- */
 
         /**Triangulo da baixo esquerda */
-        0,0,0,
-        -Math.cos(Math.PI/4)*-2.8,-1.2,Math.sin(Math.PI/4)*-2.8,
+        0.22,0,0.2,
+        -Math.cos(Math.PI/4.5)*-2.8,-1.2,Math.sin(Math.PI/4.5)*-2.8,
         0,-15.3,0,
         /**--------- */
+
+        /*Triangulo de tras*/
+        0,-1.2,0,
+        -Math.cos(Math.PI/3.6)*-2.8,-1.2,Math.sin(Math.PI/3.6)*-2.8,
+        0,-15.3,0,
+
+        /*Triangulo de tras*/
+        0,-1.2,0,
+        Math.cos(Math.PI/3.8)*2.8,-1.2,Math.sin(Math.PI/3.8)*2.8,
+        0,-15.3,0,
+
 
     ] );
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
     geometry2.computeVertexNormals();
     
-    material = new THREE.MeshPhongMaterial({    color: "white",
-                                                map: new THREE.TextureLoader().load("https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg"),
-                                                side: THREE.DoubleSide, });
-    
-    
     second_origami = new THREE.Mesh( geometry2, material );
     second_origami.castShadow = true;
     gorigamis.add(second_origami);
+
+    geometry3 = new THREE.BufferGeometry();
+
+    var vertices3 = new Float32Array( [
+
+        /**Trapezio de baixo */
+        0,0,0,
+        0,0,9.9,
+        -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+
+        0,0,0,
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+
+        /**--------- */
+
+        0,0,0,
+        0,0,9.9,
+        -Math.sin(-Math.PI/8)*-3.35,Math.cos(-Math.PI/8)*-3.35,6.6,
+
+        0,0,0,
+        -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+        -Math.sin(-Math.PI/8)*-3.35,Math.cos(-Math.PI/8)*-3.35,6.6,
+
+        /**--------- */
+
+        /**Trapezio do meio */
+        0,0,0,
+        0.5,0,5.25,
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+
+        0.5,0,5.25,
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+
+        /**-------- */
+
+        /**Trapezio do meio */
+        0,0,0,
+        -0.5,0,5.25,
+        -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+
+        -0.5,0,5.25,
+        -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+        -Math.sin(-Math.PI/8)*-3.35,Math.cos(-Math.PI/8)*-3.35,6.6,
+
+        /**-------- */
+
+        /**Trapezio de fora */
+        0,0,0,
+        0.5,0,5.25,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+
+        0.5,0,5.25,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+        -Math.sin(Math.PI/7)*-2.85,Math.cos(Math.PI/7)*-2.85,4,
+
+        /**-------- */
+        0,0,0,
+        -0.5,0,5.25,
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+
+        -0.5,0,5.25,
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+        -Math.sin(-Math.PI/7)*-2.85,Math.cos(-Math.PI/7)*-2.85,4,
+
+        /**----------- */
+
+        /** Pescoco */
+        0,0,0,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+
+        0,0,0,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+        0,6.25,2.25,
+
+        /**-------- */
+
+        0,0,0,
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+
+        0,0,0,
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+        0,6.25,2.25,
+
+        /** cabeca */
+        /**------- */
+        0,3.7,0.5,
+        0,6.25,2.25,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+
+        0,3.7,0.5,
+        0,6.25,2.25,
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+
+
+
+
+    ] );
+    geometry3.setAttribute( 'position', new THREE.BufferAttribute( vertices3, 3 ) );
+    geometry3.computeVertexNormals();
+    
+    third_origami = new THREE.Mesh( geometry3, material );
+    third_origami.position.set(12,-9,0);
+    third_origami.castShadow = true;
+    gorigamis.add(third_origami);
+
 
     gorigamis.position.set(0,17,0);
 
     gf.add(gcubes);
     gf.add(gorigamis);
 
-    spotLight1 = spotlight(-12,-17,14.5,first_origami);
+    spotLight1 = spotlight(-12,-17,24.5,first_origami);
     spotLight1.visible = true;
     spotLight1.castShadow = true;
-    spotLight2 = spotlight(0,-17,14.5,second_origami);
+    spotLight2 = spotlight(0,-17,24.5,second_origami);
     spotLight2.visible = true;
     spotLight2.castShadow = true;
+    spotLight3 = spotlight(12,-17,24.5,third_origami);
+    spotLight3.visible = true;
+    spotLight3.castShadow = true;
+
 
 
     scene.add(gf);
@@ -241,17 +369,17 @@ function createScene() {
 
     var directionHelper = new THREE.DirectionalLightHelper(directionalLight,3);
     scene.add(directionalLight);
-    scene.add(directionHelper);
+    //scene.add(directionHelper);
     var directionHelper1 = new THREE.DirectionalLightHelper(spotLight1,3);
-    scene.add(directionHelper1);
-    var directionHelper2 = new THREE.DirectionalLightHelper(spotLight2,3);
-    scene.add(directionHelper2);
+    //scene.add(directionHelper1);
+    var directionHelper2 = new THREE.SpotLightHelper(spotLight2,3);
+    //scene.add(directionHelper2);
     //var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
     //scene.add( helperS );
     //var helperS1 = new THREE.CameraHelper( spotLight1.shadow.camera );
     //scene.add( helperS1 );
     var helperS2 = new THREE.CameraHelper( spotLight2.shadow.camera );
-    scene.add( helperS2 );
+    //scene.add( helperS2 );
 }
 
 function createCamera() {
@@ -260,27 +388,27 @@ function createCamera() {
                                             window.innerWidth / window.innerHeight,
                                             1,
                                             1000);
-    FixedPerspCamera.position.x = 10;
+    FixedPerspCamera.position.x = 50;
     FixedPerspCamera.position.y = 50;
-    FixedPerspCamera.position.z = 0;
+    FixedPerspCamera.position.z = 50;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
 	
     if(aspectRatio > cameraRatio) {
-        FrontalCamera = new THREE.OrthographicCamera(height*aspectRatio / (-2), 
-                                        height*aspectRatio/ (2), 
-                                        height / 2, 
-                                        height / (-2),
+        FrontalCamera = new THREE.OrthographicCamera(height*aspectRatio / (-3), 
+                                        height*aspectRatio/ (3), 
+                                        height / 3, 
+                                        height / (-3),
                                         1,
                                         1000);
     }
     else{
         FrontalCamera = new THREE.OrthographicCamera(
-                                        width / (-2), 
-                                        width / (2), 
-                                        (width/aspectRatio) / 2, 
-                                        (width/aspectRatio) / (-2),
+                                        width / (-3), 
+                                        width / (3), 
+                                        (width/aspectRatio) / 3, 
+                                        (width/aspectRatio) / (-3),
                                         1,
                                         1000);
     }
@@ -369,6 +497,12 @@ function onKeyDown(e) {
             gpause.visible = false;
         }
         break;
+    case 65: //A
+    case 97: //a
+        if(material == materialList[0])
+            material = materialList[1];
+        else
+            material = materialList[0];
     }
 }
 
@@ -448,6 +582,12 @@ function movement(deltaTime){
     if(right2 == true){
         second_origami.rotateY(angle);
     }
+    if(left3 == true){
+        third_origami.rotateY(-angle);
+    }
+    if(right3 == true){
+        third_origami.rotateY(angle);
+    }
 }
 
 function lights(){
@@ -469,18 +609,21 @@ function lights(){
     if(lightH2 == false){
         spotLight2.visible = false;
     }
-    /*if(lightH3 == true){
+    if(lightH3 == true){
         spotLight3.visible = true;
     }
     if(lightH3 == false){
         spotLight3.visible = false;
-    }*/
+    }
+    first_origami.material = material;
+    second_origami.material = material;
+    third_origami.material = material;
 }
 
 function reset(){
     first_origami.rotation.set(0,0,0);
     second_origami.rotation.set(0,0,0);
-    //third_origami
+    third_origami.rotation.set(0,0,0);
     lightH1 = true;
     lightH2 = true;
     lightH3 = true;
