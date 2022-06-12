@@ -17,7 +17,7 @@ function createCube(x, y, z, width, height, depth, g) {
 
     var cube = new THREE.Object3D();
     
-    var materialC = new THREE.MeshLambertMaterial({ color: 0x00ff00,});
+    var materialC = new THREE.MeshPhongMaterial({ color: 0x98633b,});
 
     var geometryC = new THREE.BoxGeometry(width, height, depth);
     var meshC = new THREE.Mesh(geometryC, materialC);
@@ -41,12 +41,11 @@ function spotlight(x,y,z,origami){
     const widthSegments = 12;  // ui: widthSegments
     const heightSegments = 8;  // ui: heightSegments
     
-    var materialS = new THREE.MeshPhongMaterial({ color: 0xff0000});
+    var materialS = new THREE.MeshPhongMaterial({ color: 0xffffc2});
     var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
     var meshS = new THREE.Mesh(geometryS, materialS);
 
-    //meshS.castShadow = true;
-    //meshS.receiveShadow = true;
+    meshS.castShadow = true;
     
     sphere.add(meshS);
     
@@ -54,7 +53,7 @@ function spotlight(x,y,z,origami){
 
     var cone = new THREE.Object3D();
     
-    materialS = new THREE.MeshPhongMaterial({ color: 0x1260cc});
+    materialS = new THREE.MeshPhongMaterial({ color: 0x1b1e23});
 
     const height = 1;  // ui: height
     const radialSegments = 16;  // ui: radialSegments
@@ -63,6 +62,8 @@ function spotlight(x,y,z,origami){
     meshS = new THREE.Mesh(geometryS, materialS);
     cone.add(meshS);
 
+    meshS.castShadow = true;
+    
     cone.rotateX(3*Math.PI/4);
     cone.position.set(0,-0.8,0.8);
 
@@ -70,9 +71,10 @@ function spotlight(x,y,z,origami){
 
     hol.position.set(x,y + 1,z - 1);
 
-    Hlight.position.set(x,y+2,z-1);
+    Hlight.position.set(x,y+2,z - 2);
     
-    Hlight.target = origami;
+    //Hlight.target = origami;
+    Hlight.target.position.set(origami.position.x, 11, origami.position.z);
     Hlight.target.updateMatrixWorld();
 
     gorigamis.add( Hlight );
@@ -102,9 +104,9 @@ function createScene() {
 
     gf.add(gpause);
 
-    createCube(0,0,0,20,30,50,gcubes);
-    createCube(0,-5,30,20,20,10,gcubes);
-    createCube(0,-10,40,20,10,10,gcubes);
+    createCube(0,0,0,20,30,30,gcubes);
+    createCube(0,-5,20,20,20,10,gcubes);
+    createCube(0,-10,30,20,10,10,gcubes);
 
     gcubes.position.set(0,-15,0);
 
@@ -164,6 +166,7 @@ function createScene() {
     first_origami = new THREE.Mesh( geometry, material );
     first_origami.position.set(-12,-5,0);
     first_origami.castShadow = true;
+    first_origami.receiveShadow = true;
     gorigamis.add(first_origami);
 
     geometry2 = new THREE.BufferGeometry();
@@ -224,6 +227,7 @@ function createScene() {
     
     second_origami = new THREE.Mesh( geometry2, material );
     second_origami.castShadow = true;
+    second_origami.receiveShadow = true;
     gorigamis.add(second_origami);
 
     geometry3 = new THREE.BufferGeometry();
@@ -332,6 +336,7 @@ function createScene() {
     third_origami = new THREE.Mesh( geometry3, material );
     third_origami.position.set(12,-9,0);
     third_origami.castShadow = true;
+    third_origami.receiveShadow = true;
     gorigamis.add(third_origami);
 
 
@@ -340,13 +345,13 @@ function createScene() {
     gf.add(gcubes);
     gf.add(gorigamis);
 
-    spotLight1 = spotlight(-12,-17,24.5,first_origami);
+    spotLight1 = spotlight(-12,-17,14.5,first_origami);
     spotLight1.visible = true;
     spotLight1.castShadow = true;
-    spotLight2 = spotlight(0,-17,24.5,second_origami);
+    spotLight2 = spotlight(0,-17,14.5,second_origami);
     spotLight2.visible = true;
     spotLight2.castShadow = true;
-    spotLight3 = spotlight(12,-17,24.5,third_origami);
+    spotLight3 = spotlight(12,-17,14.5,third_origami);
     spotLight3.visible = true;
     spotLight3.castShadow = true;
 
@@ -361,7 +366,7 @@ function createScene() {
 
     directionalLight.shadow.camera.left = -20;
     directionalLight.shadow.camera.right = 15;
-    directionalLight.shadow.camera.top = 18;
+    directionalLight.shadow.camera.top = 25;
     directionalLight.shadow.camera.bottom = -15;
 
     directionalLight.shadow.mapSize.width = 1000;
@@ -374,12 +379,12 @@ function createScene() {
     //scene.add(directionHelper1);
     var directionHelper2 = new THREE.SpotLightHelper(spotLight2,3);
     //scene.add(directionHelper2);
-    //var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
+    var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
     //scene.add( helperS );
-    //var helperS1 = new THREE.CameraHelper( spotLight1.shadow.camera );
+    var helperS1 = new THREE.CameraHelper( spotLight1.shadow.camera );
     //scene.add( helperS1 );
     var helperS2 = new THREE.CameraHelper( spotLight2.shadow.camera );
-    //scene.add( helperS2 );
+    scene.add( helperS2 );
 }
 
 function createCamera() {
@@ -388,9 +393,9 @@ function createCamera() {
                                             window.innerWidth / window.innerHeight,
                                             1,
                                             1000);
-    FixedPerspCamera.position.x = 50;
-    FixedPerspCamera.position.y = 50;
-    FixedPerspCamera.position.z = 50;
+    FixedPerspCamera.position.x = 30;
+    FixedPerspCamera.position.y = 30;
+    FixedPerspCamera.position.z = 0;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
