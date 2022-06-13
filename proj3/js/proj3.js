@@ -152,23 +152,55 @@ function createScene() {
      * padrão 2: https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg
      * padrão 3: https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg
      */
-
+    
     materialList = [new THREE.MeshPhongMaterial({    
                             color: "white",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),
                     new THREE.MeshLambertMaterial({
                             color: "white",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),
                     new THREE.MeshBasicMaterial({
                             color: "white",
                             //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),
                 ]
-
-    material = materialList[0];
     
+    var url1 = "https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png";
+    var url2 = "https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg";
+    var url3 = "https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg";
+    material = materialList[0];
+    var onLoad1 = function (texture){
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(0.05,0.05);
+        materialList[0].map = texture;
+        materialList[0].needsUpdate = true;
+    }
+    
+    var loader1 = new THREE.TextureLoader();
+    loader1.load(url1,onLoad1);
+
+    var onLoad2 = function (texture){
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(0.04,0.04);
+        materialList[1].map = texture;
+        materialList[1].needsUpdate = true;
+    }
+    
+    var loader2 = new THREE.TextureLoader();
+    loader2.load(url2,onLoad2);
+
+    var onLoad3 = function (texture){
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(0.04,0.04);
+        materialList[2].map = texture;
+        materialList[2].needsUpdate = true;
+    }
+    
+    var loader3 = new THREE.TextureLoader();
+    loader3.load(url2,onLoad3);
     //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
     /**
@@ -193,6 +225,7 @@ function createScene() {
 
     ] );
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
     geometry.computeVertexNormals();
     first_origami = new THREE.Mesh( geometry, material );
     first_origami.position.set(-12,-5,0);
@@ -254,6 +287,7 @@ function createScene() {
 
     ] );
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
+    geometry2.setAttribute( 'uv', new THREE.BufferAttribute( vertices2, 3 ));
     geometry2.computeVertexNormals();
     
     second_origami = new THREE.Mesh( geometry2, material );
@@ -362,6 +396,7 @@ function createScene() {
 
     ] );
     geometry3.setAttribute( 'position', new THREE.BufferAttribute( vertices3, 3 ) );
+    geometry3.setAttribute( 'uv', new THREE.BufferAttribute( vertices3, 3 ));
     geometry3.computeVertexNormals();
     
     third_origami = new THREE.Mesh( geometry3, material );
