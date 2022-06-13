@@ -7,28 +7,24 @@ var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
-var geometry2, geometry3, materialList;
+var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS;
+var cubeList = new Array();
+var spotList = new Array();
 
 var gcubes, gorigamis, gf, gpause;
 var geometry, material, mesh;
 
-function createCube(x, y, z, width, height, depth, g) {
+function createCube(x, y, z, width, height, depth,g) {
     'use strict';
-
-    var cube = new THREE.Object3D();
-    
-    var materialC = new THREE.MeshPhongMaterial({ color: 0x98633b,});
 
     var geometryC = new THREE.BoxGeometry(width, height, depth);
     var meshC = new THREE.Mesh(geometryC, materialC);
 
     meshC.receiveShadow = true;
     
-    cube.add(meshC);
-
-    cube.position.set(x,y,z);
-
-    g.add(cube);
+    meshC.position.set(x,y,z);
+    cubeList.push(meshC);
+    g.add(meshC);
 }
 
 function spotlight(x,y,z,origami){
@@ -41,9 +37,10 @@ function spotlight(x,y,z,origami){
     const widthSegments = 12;  // ui: widthSegments
     const heightSegments = 8;  // ui: heightSegments
     
-    var materialS = new THREE.MeshPhongMaterial({ color: 0xffffc2});
+    //var materialS = new THREE.MeshPhongMaterial({ color: 0xffffc2});
     var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
     var meshS = new THREE.Mesh(geometryS, materialS);
+    spotList.push(meshS);
 
     meshS.castShadow = true;
     
@@ -52,14 +49,12 @@ function spotlight(x,y,z,origami){
     hol.add(sphere);
 
     var cone = new THREE.Object3D();
-    
-    materialS = new THREE.MeshPhongMaterial({ color: 0x1b1e23});
 
     const height = 1;  // ui: height
     const radialSegments = 16;  // ui: radialSegments
     geometryS = new THREE.ConeGeometry(radius, height, radialSegments);
-   
     meshS = new THREE.Mesh(geometryS, materialS);
+    spotList.push(meshS);
     cone.add(meshS);
 
     meshS.castShadow = true;
@@ -98,6 +93,38 @@ function createScene() {
     gf = new THREE.Object3D();
     gpause = new THREE.Object3D();
 
+    materialCList = [new THREE.MeshPhongMaterial({    
+                            color: "brown",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide, }),
+                    new THREE.MeshLambertMaterial({
+                            color: "brown",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide,}),
+                    new THREE.MeshBasicMaterial({
+                            color: "brown",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide, }),    
+    ]
+
+    materialC = materialCList[0];
+
+    materialSList = [new THREE.MeshPhongMaterial({    
+                            color: "yellow",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide, }),
+                    new THREE.MeshLambertMaterial({
+                            color: "yellow",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide,}),
+                    new THREE.MeshBasicMaterial({
+                            color: "yellow",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide, }),
+    ]
+
+    materialS = materialSList[0];
+
     //Aqui temos q inserir o objeto de pausa
     createCube(20,20,20,10,10,10,gpause);
     gpause.visible = false;
@@ -133,8 +160,12 @@ function createScene() {
                     new THREE.MeshLambertMaterial({
                             color: "white",
                             //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
-                            side: THREE.DoubleSide,
-                    })]
+                            side: THREE.DoubleSide, }),
+                    new THREE.MeshBasicMaterial({
+                            color: "white",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            side: THREE.DoubleSide, }),
+                ]
 
     material = materialList[0];
     
@@ -356,7 +387,6 @@ function createScene() {
     spotLight3.castShadow = true;
 
 
-
     scene.add(gf);
 
     directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
@@ -395,7 +425,7 @@ function createCamera() {
                                             1000);
     FixedPerspCamera.position.x = 30;
     FixedPerspCamera.position.y = 30;
-    FixedPerspCamera.position.z = 0;
+    FixedPerspCamera.position.z = 30;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
@@ -502,12 +532,24 @@ function onKeyDown(e) {
             gpause.visible = false;
         }
         break;
+    case 115: //s
+        material = materialList[2];
+        materialC = materialCList[2];
+        materialS = materialSList[2];
+        break;
     case 65: //A
     case 97: //a
-        if(material == materialList[0])
+        if(material == materialList[0]){
             material = materialList[1];
-        else
+            materialC = materialCList[1];
+            materialS = materialSList[1];
+        }
+        else{
             material = materialList[0];
+            materialC = materialCList[0];
+            materialS = materialSList[0];
+        }
+        break;
     }
 }
 
@@ -623,6 +665,12 @@ function lights(){
     first_origami.material = material;
     second_origami.material = material;
     third_origami.material = material;
+    for(var i = 0; i < cubeList.length; i++){
+       cubeList[i].material = materialC;
+    }
+    for(var j = 0; j < spotList.length; j++){
+        spotList[j].material = materialS;
+    }
 }
 
 function reset(){
@@ -635,6 +683,9 @@ function reset(){
     light = true;
     gpause.visible = false;
     pause = false;
+    material = materialList[0];
+    materialC = materialCList[0];
+    materialS = materialSList[0];
 }
 
 function render() {
@@ -643,6 +694,7 @@ function render() {
         renderer.render(scene, FrontalCamera);
     if(isFixedPerspCamera)
         renderer.render(scene, FixedPerspCamera);
+    
 }
 
 function init() {
@@ -654,6 +706,9 @@ function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+    document.body.appendChild( VRButton.createButton( renderer ) );
+
+    renderer.xr.enabled = true;
 
     clock = new THREE.Clock(true);
    
@@ -661,7 +716,7 @@ function init() {
     createCamera();
     
     
-    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keypress", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 }
@@ -681,8 +736,8 @@ function update(){
 
 function animate() {
     'use strict';
-    update();
-    render();
-    
-    requestAnimationFrame(animate);
+    renderer.setAnimationLoop( function () {
+        update();
+        render();
+    } );
 }
