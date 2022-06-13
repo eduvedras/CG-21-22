@@ -7,7 +7,7 @@ var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
-var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS;
+var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS,pauseMaterial;
 var cubeList = new Array();
 var spotList = new Array();
 
@@ -126,7 +126,22 @@ function createScene() {
     materialS = materialSList[0];
 
     //Aqui temos q inserir o objeto de pausa
-    createCube(20,20,20,10,10,10,gpause);
+    geometry = new THREE.PlaneGeometry(width/4, height/4);
+
+    var pauseTextureUrl = "https://cld.pt/dl/download/dc42ff37-1e80-4535-aecb-1f2980cb894a/Group%2020.png";
+    pauseMaterial = new THREE.MeshBasicMaterial();
+
+    var onLoadMaterial = function (texture){
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1,1);
+        pauseMaterial.map = texture;
+        pauseMaterial.needsUpdate = true;
+    }
+    
+    var pauseLoader = new THREE.TextureLoader();
+    pauseLoader.load(pauseTextureUrl,onLoadMaterial);
+    gpause = new THREE.Mesh(geometry, pauseMaterial);
     gpause.visible = false;
 
     gf.add(gpause);
@@ -450,6 +465,9 @@ function createScene() {
     //scene.add( helperS1 );
     var helperS2 = new THREE.CameraHelper( spotLight2.shadow.camera );
     scene.add( helperS2 );
+
+
+
 }
 
 function createCamera() {
@@ -765,6 +783,18 @@ function update(){
     else{
         lights();
         movement(deltaTime);
+    }
+
+    if(isFixedPerspCamera){
+        gpause.scale.set(0.5,0.5,0.5);
+        gpause.position.set(15,15,15);
+        gpause.lookAt(new THREE.Vector3(30,30,30));
+        
+    }
+    if(isFrontalCamera){
+        gpause.scale.set(1,1,1);
+        gpause.position.set(0,0,95);
+        gpause.lookAt(new THREE.Vector3(0,0,100));
     }
 
 }
