@@ -7,6 +7,7 @@ var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
+var isBasicMaterial = false;
 var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS,pauseMaterial;
 var cubeList = new Array();
 var spotList = new Array();
@@ -586,9 +587,12 @@ function onKeyDown(e) {
         }
         break;
     case 115: //s
-        material = materialList[2];
-        materialC = materialCList[2];
-        materialS = materialSList[2];
+        if(isBasicMaterial == false){
+            isBasicMaterial = true;
+        }
+        else{
+            isBasicMaterial = false;
+        }
         break;
     case 65: //A
     case 97: //a
@@ -715,6 +719,16 @@ function lights(){
     if(lightH3 == false){
         spotLight3.visible = false;
     }
+    if(isBasicMaterial == true){
+        material = materialList[2];
+        materialC = materialCList[2];
+        materialS = materialSList[2];
+    }
+    else{
+        material = materialList[0];
+        materialC = materialCList[0];
+        materialS = materialSList[0];
+    }
     first_origami.material = material;
     second_origami.material = material;
     third_origami.material = material;
@@ -739,6 +753,7 @@ function reset(){
     material = materialList[0];
     materialC = materialCList[0];
     materialS = materialSList[0];
+    isFixedPerspCamera = true
 }
 
 function render() {
