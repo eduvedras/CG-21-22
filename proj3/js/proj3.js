@@ -2,7 +2,7 @@
 
 //import * as THREE from 'three';
 
-var FixedPerspCamera, FrontalCamera, isFixedPerspCamera = true, isFrontalCamera = false, scene, renderer, clock;
+var FixedPerspCamera, FrontalCamera,VRCamera,VRPrespCamera, isFixedPerspCamera = true, isFrontalCamera = false, scene, renderer, clock;
 var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
@@ -505,6 +505,17 @@ function createCamera() {
     FrontalCamera.position.y = 0;
     FrontalCamera.position.z = 100;
     FrontalCamera.lookAt(scene.position);
+    
+
+    VRPrespCamera = new THREE.PerspectiveCamera(70,
+        window.innerWidth / window.innerHeight,
+        1,
+        1000);
+    VRPrespCamera.position.x = 15;
+    VRPrespCamera.position.y = 15;
+    VRPrespCamera.position.z = 15;
+    VRPrespCamera.lookAt(scene.position);
+    VRCamera = new THREE.StereoCamera();
 
 }
 
@@ -759,6 +770,12 @@ function reset(){
 
 function render() {
     'use strict';
+    if(renderer.xr.isPresenting){
+        VRCamera.update(VRPrespCamera);
+        renderer.render(scene,VRCamera.cameraL);
+        renderer.render(scene, VRCamera.cameraR);
+        return;
+    }
     if(isFrontalCamera)
         renderer.render(scene, FrontalCamera);
     if(isFixedPerspCamera)
@@ -800,7 +817,6 @@ function update(){
         lights();
         movement(deltaTime);
     }
-
     if(isFixedPerspCamera){
         gpause.scale.set(0.5,0.5,0.5);
         gpause.position.set(15,15,15);
