@@ -7,7 +7,7 @@ var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
-var isBasicMaterial = false;
+var isBasicMaterial = false, isLambertMaterial = false;
 var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS,pauseMaterial;
 var cubeList = new Array();
 var spotList = new Array();
@@ -205,7 +205,7 @@ function createScene() {
     }
     
     var loader2 = new THREE.TextureLoader();
-    loader2.load(url2,onLoad2);
+    loader2.load(url1,onLoad2);
 
     var onLoad3 = function (texture){
         texture.wrapS = THREE.RepeatWrapping;
@@ -216,7 +216,7 @@ function createScene() {
     }
     
     var loader3 = new THREE.TextureLoader();
-    loader3.load(url2,onLoad3);
+    loader3.load(url1,onLoad3);
     //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
     /**
@@ -596,16 +596,10 @@ function onKeyDown(e) {
         break;
     case 65: //A
     case 97: //a
-        if(material == materialList[0]){
-            material = materialList[1];
-            materialC = materialCList[1];
-            materialS = materialSList[1];
+        if(isLambertMaterial == true){
+            isLambertMaterial = false;
         }
-        else{
-            material = materialList[0];
-            materialC = materialCList[0];
-            materialS = materialSList[0];
-        }
+        else isLambertMaterial = true;
         break;
     }
 }
@@ -724,6 +718,11 @@ function lights(){
         materialC = materialCList[2];
         materialS = materialSList[2];
     }
+    else if(isLambertMaterial == true){
+        material = materialList[1];
+        materialC = materialCList[1];
+        materialS = materialSList[1];
+    }
     else{
         material = materialList[0];
         materialC = materialCList[0];
@@ -750,6 +749,8 @@ function reset(){
     light = true;
     gpause.visible = false;
     pause = false;
+    isLambertMaterial = false;
+    isBasicMaterial = false;
     material = materialList[0];
     materialC = materialCList[0];
     materialS = materialSList[0];
