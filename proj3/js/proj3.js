@@ -8,12 +8,12 @@ var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
 var directionalLight, lightH1 = true, lightH2 = true, lightH3 = true, spotLight1, spotLight2, spotLight3,pause = false;
 var isBasicMaterial = false, isLambertMaterial = false;
-var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS,pauseMaterial;
+var geometry2, geometry3, materialList,materialCList,materialSList,materialC,materialS,pauseMateria,basicmaterialList;
 var cubeList = new Array();
 var spotList = new Array();
 
 var gcubes, gorigamis, gf, gpause;
-var geometry, material, mesh;
+var geometry, material = new Array(), mesh;
 
 function createCube(x, y, z, width, height, depth,g) {
     'use strict';
@@ -193,23 +193,42 @@ function createScene() {
      * padrão 2: https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg
      * padrão 3: https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg
      */
-    
-    materialList = [new THREE.MeshPhongMaterial({    
+
+    basicmaterialList = [new THREE.MeshPhongMaterial({    
                             color: "white",
-                            side: THREE.DoubleSide, }),
+                            //side: THREE.DoubleSide, 
+                        }),
                     new THREE.MeshLambertMaterial({
                             color: "white",
-                            side: THREE.DoubleSide, }),
+                            //side: THREE.DoubleSide, 
+                        }),
                     new THREE.MeshBasicMaterial({
                             color: "white",
                             //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
-                            side: THREE.DoubleSide, }),
+                            //side: THREE.DoubleSide, 
+                        }),
+                    ]
+    
+    materialList = [new THREE.MeshPhongMaterial({    
+                            color: "white",
+                            //side: THREE.DoubleSide, 
+                        }),
+                    new THREE.MeshLambertMaterial({
+                            color: "white",
+                            //side: THREE.DoubleSide, 
+                        }),
+                    new THREE.MeshBasicMaterial({
+                            color: "white",
+                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
+                            //side: THREE.DoubleSide, 
+                        }),
                 ]
     
     var url1 = "https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png";
     var url2 = "https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg";
     var url3 = "https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg";
-    material = materialList[0];
+    material[0] = materialList[0];
+    material[1] = basicmaterialList[0];
     var onLoad1 = function (texture){
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
@@ -247,16 +266,32 @@ function createScene() {
         0,10,0,
         /**--------- */
 
+        /*----------------------*/
+
+        /**Triangulo da direita */
+        0,10,0,
+        Math.cos(Math.PI/4)*10,0,Math.sin(Math.PI/4)*10,
+        0,-10,0,
+        /**--------- */
+
+        /**Triangulo da esquerda */
+        0,10,0,
+        0,-10,0,
+        -Math.cos(Math.PI/4)*10,0,Math.sin(Math.PI/4)*10,
+        /**--------- */
+
     ] );
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
     geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
     geometry.computeVertexNormals();
+    geometry.addGroup(0,6,0);
+    geometry.addGroup(6,6,1);
     first_origami = new THREE.Mesh( geometry, material );
     first_origami.position.set(-12,-5,0);
     first_origami.castShadow = true;
     first_origami.receiveShadow = true;
     gorigamis.add(first_origami);
-
+    
     geometry2 = new THREE.BufferGeometry();
 
     var vertices2 = new Float32Array( [
@@ -314,7 +349,7 @@ function createScene() {
     geometry2.setAttribute( 'uv', new THREE.BufferAttribute( vertices2, 3 ));
     geometry2.computeVertexNormals();
     
-    second_origami = new THREE.Mesh( geometry2, material );
+    second_origami = new THREE.Mesh( geometry2, material[0] );
     second_origami.castShadow = true;
     second_origami.receiveShadow = true;
     gorigamis.add(second_origami);
@@ -423,7 +458,7 @@ function createScene() {
     geometry3.setAttribute( 'uv', new THREE.BufferAttribute( vertices3, 3 ));
     geometry3.computeVertexNormals();
     
-    third_origami = new THREE.Mesh( geometry3, material );
+    third_origami = new THREE.Mesh( geometry3, material[0] );
     third_origami.position.set(12,-9,0);
     third_origami.castShadow = true;
     third_origami.receiveShadow = true;
@@ -755,23 +790,26 @@ function lights(){
         spotLight3.visible = false;
     }
     if(isBasicMaterial == true){
-        material = materialList[2];
+        material[0] = materialList[2];
+        material[1] = basicmaterialList[2];
         materialC = materialCList[2];
         materialS = materialSList[2];
     }
     else if(isLambertMaterial == true){
-        material = materialList[1];
+        material[0] = materialList[1];
+        material[1] = basicmaterialList[1];
         materialC = materialCList[1];
         materialS = materialSList[1];
     }
     else{
-        material = materialList[0];
+        material[0] = materialList[0];
+        material[1] = basicmaterialList[0];
         materialC = materialCList[0];
         materialS = materialSList[0];
     }
     first_origami.material = material;
-    second_origami.material = material;
-    third_origami.material = material;
+    //second_origami.material = material;
+    //third_origami.material = material;
     for(var i = 0; i < cubeList.length; i++){
        cubeList[i].material = materialC;
     }
@@ -792,7 +830,8 @@ function reset(){
     //pause = false;
     isLambertMaterial = false;
     isBasicMaterial = false;
-    material = materialList[0];
+    material[0] = materialList[0];
+    material[1] = basicmaterialList[0];
     materialC = materialCList[0];
     materialS = materialSList[0];
     isFixedPerspCamera = true
