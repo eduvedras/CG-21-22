@@ -2,7 +2,7 @@
 
 //import * as THREE from 'three';
 
-var FixedPerspCamera, FrontalCamera,VRCamera,VRPrespCamera, isFixedPerspCamera = true, isFrontalCamera = false, scene, renderer, clock;
+var FixedPerspCamera, FrontalCamera, PauseCamera, VRCamera,VRPrespCamera, isPause = false, isFixedPerspCamera = true, isFrontalCamera = false, scene, pausescene, renderer, clock;
 var width=200, height=130, cameraRatio = (width/height);
 var first_origami, second_origami, third_origami;
 var left1, left2, left3, right1, right2, right3, light = true;
@@ -80,6 +80,31 @@ function spotlight(x,y,z,origami){
     return Hlight;
 }
 
+function createPauseScene(){
+    pausescene = new THREE.Scene();
+    geometry = new THREE.PlaneGeometry(width/4, height/4);
+
+    var pauseTextureUrl = "https://cld.pt/dl/download/dc42ff37-1e80-4535-aecb-1f2980cb894a/Group%2020.png";
+    pauseMaterial = new THREE.MeshBasicMaterial();
+
+    var onLoadMaterial = function (texture){
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1,1);
+        pauseMaterial.map = texture;
+        pauseMaterial.needsUpdate = true;
+    }
+    
+    var pauseLoader = new THREE.TextureLoader();
+    pauseLoader.load(pauseTextureUrl,onLoadMaterial);
+    gpause = new THREE.Mesh(geometry, pauseMaterial);
+    //gpause.visible = false;
+
+    //pausescene.add(scene);
+    pausescene.add(gpause);
+
+}
+
 
 
 function createScene() {
@@ -127,7 +152,7 @@ function createScene() {
     materialS = materialSList[0];
 
     //Aqui temos q inserir o objeto de pausa
-    geometry = new THREE.PlaneGeometry(width/4, height/4);
+    /*geometry = new THREE.PlaneGeometry(width/4, height/4);
 
     var pauseTextureUrl = "https://cld.pt/dl/download/dc42ff37-1e80-4535-aecb-1f2980cb894a/Group%2020.png";
     pauseMaterial = new THREE.MeshBasicMaterial();
@@ -145,7 +170,7 @@ function createScene() {
     gpause = new THREE.Mesh(geometry, pauseMaterial);
     gpause.visible = false;
 
-    gf.add(gpause);
+    gf.add(gpause);*/
 
     createCube(0,0,0,20,30,30,gcubes);
     createCube(0,-5,20,20,20,10,gcubes);
@@ -191,32 +216,15 @@ function createScene() {
         texture.repeat.set(0.05,0.05);
         materialList[0].map = texture;
         materialList[0].needsUpdate = true;
+        materialList[1].map = texture;
+        materialList[1].needsUpdate = true;
+        materialList[2].map = texture;
+        materialList[2].needsUpdate = true;
     }
     
     var loader1 = new THREE.TextureLoader();
     loader1.load(url1,onLoad1);
 
-    var onLoad2 = function (texture){
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(0.04,0.04);
-        materialList[1].map = texture;
-        materialList[1].needsUpdate = true;
-    }
-    
-    var loader2 = new THREE.TextureLoader();
-    loader2.load(url1,onLoad2);
-
-    var onLoad3 = function (texture){
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(0.04,0.04);
-        materialList[2].map = texture;
-        materialList[2].needsUpdate = true;
-    }
-    
-    var loader3 = new THREE.TextureLoader();
-    loader3.load(url1,onLoad3);
     //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
 
     /**
@@ -505,6 +513,28 @@ function createCamera() {
     FrontalCamera.position.y = 0;
     FrontalCamera.position.z = 100;
     FrontalCamera.lookAt(scene.position);
+
+    if(aspectRatio > cameraRatio) {
+        PauseCamera = new THREE.OrthographicCamera(height*aspectRatio / (-3), 
+                                        height*aspectRatio/ (3), 
+                                        height / 3, 
+                                        height / (-3),
+                                        1,
+                                        1000);
+    }
+    else{
+        PauseCamera = new THREE.OrthographicCamera(
+                                        width / (-3), 
+                                        width / (3), 
+                                        (width/aspectRatio) / 3, 
+                                        (width/aspectRatio) / (-3),
+                                        1,
+                                        1000);
+    }
+    PauseCamera.position.x = 0;
+    PauseCamera.position.y = 0;
+    PauseCamera.position.z = 100;
+    PauseCamera.lookAt(pausescene.position);
     
 
     VRPrespCamera = new THREE.PerspectiveCamera(70,
@@ -543,12 +573,11 @@ function onKeyDown(e) {
     case 101: //e
         left2 = true;
         break;
+    case 51://3
+        reset();
+        break;
     case 82: //R
     case 114: //r
-        if(pause == true){
-            reset();
-            break;
-        }
         right2 = true;
         break;
     case 84: //T
@@ -587,16 +616,17 @@ function onKeyDown(e) {
         else
             lightH3 = false;
         break;
-    case 83: //S
-        if(pause == false){
-            pause = true;
-            gpause.visible = true;
+    case 32: //Space
+        if(isPause == false){
+            isPause = true;
+            //gpause.visible = true;
         }
         else{
-            pause = false;
-            gpause.visible = false;
+            isPause = false;
+            //gpause.visible = false;
         }
         break;
+    case 83: //S
     case 115: //s
         if(isBasicMaterial == false){
             isBasicMaterial = true;
@@ -758,8 +788,8 @@ function reset(){
     lightH2 = true;
     lightH3 = true;
     light = true;
-    gpause.visible = false;
-    pause = false;
+    //gpause.visible = false;
+    //pause = false;
     isLambertMaterial = false;
     isBasicMaterial = false;
     material = materialList[0];
@@ -770,6 +800,8 @@ function reset(){
 
 function render() {
     'use strict';
+    renderer.autoClear = false;
+    renderer.clear();
     if(renderer.xr.isPresenting){
         VRCamera.update(VRPrespCamera);
         renderer.render(scene,VRCamera.cameraL);
@@ -780,6 +812,10 @@ function render() {
         renderer.render(scene, FrontalCamera);
     if(isFixedPerspCamera)
         renderer.render(scene, FixedPerspCamera);
+    if(isPause){
+        renderer.clearDepth();
+        renderer.render(pausescene, PauseCamera);
+    }
     
 }
 
@@ -799,6 +835,7 @@ function init() {
     clock = new THREE.Clock(true);
    
     createScene();
+    createPauseScene();
     createCamera();
     
     
@@ -808,27 +845,18 @@ function init() {
 }
 
 function update(){
-    let deltaTime = clock.getDelta();
+    
 
-    if(pause == true){
-        return;
-    }
-    else{
-        lights();
-        movement(deltaTime);
-    }
-    if(isFixedPerspCamera){
+    lights();
+    if(isPause){
         gpause.scale.set(0.5,0.5,0.5);
-        gpause.position.set(15,15,15);
-        gpause.lookAt(new THREE.Vector3(30,30,30));
-        
-    }
-    if(isFrontalCamera){
-        gpause.scale.set(1,1,1);
         gpause.position.set(0,0,95);
         gpause.lookAt(new THREE.Vector3(0,0,100));
+        return;
     }
-
+    let deltaTime = clock.getDelta();
+    movement(deltaTime);
+    
 }
 
 function animate() {
