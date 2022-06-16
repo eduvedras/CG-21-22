@@ -297,22 +297,22 @@ function createScene() {
     var vertices2 = new Float32Array( [
 
         /**Triangulo da cima direita */
-        0,-15.3,0,
         Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0,-15.3,0,
         0,4.7,0,
         /**--------- */
 
         /**Triangulo da cima esquerda */
-        0,-15.3,0,
         -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
         0,4.7,0,
+        0,-15.3,0,
         /**--------- */
 
         /**Triangulo da meio direita */
         //0,0,0,
-        0.22,0,-0.2,
-        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
         0,-15.3,0,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0.22,0,-0.2,
         /**--------- */
 
         /**Triangulo da meio esquerda */
@@ -328,9 +328,9 @@ function createScene() {
         /**--------- */
 
         /**Triangulo da baixo esquerda */
-        0.22,0,0.2,
-        -Math.cos(Math.PI/4.5)*-2.8,-1.2,Math.sin(Math.PI/4.5)*-2.8,
         0,-15.3,0,
+        -Math.cos(Math.PI/4.5)*-2.8,-1.2,Math.sin(Math.PI/4.5)*-2.8,
+        0.22,0,0.2,
         /**--------- */
 
         /*Triangulo de tras*/
@@ -339,17 +339,68 @@ function createScene() {
         0,-15.3,0,
 
         /*Triangulo de tras*/
+        0,-15.3,0,
+        Math.cos(Math.PI/3.8)*2.8,-1.2,Math.sin(Math.PI/3.8)*2.8,
+        0,-1.2,0,
+
+        /************************************************ */
+        /*----------------Parte não colorida------------- */
+        /************************************************ */
+
+        /**Triangulo da cima direita */
+        0,-15.3,0,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0,4.7,0,
+        /**--------- */
+
+        /**Triangulo da cima esquerda */
+        0,4.7,0,
+        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
+        0,-15.3,0,
+        /**--------- */
+
+        /**Triangulo da meio direita */
+        //0,0,0,
+        0.22,0,-0.2,
+        Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
+        0,-15.3,0,
+        /**--------- */
+
+        /**Triangulo da meio esquerda */
+        0,-15.3,0,
+        -Math.cos(Math.PI/4)*-3.3,1.4,Math.sin(Math.PI/4)*-3.3,
+        0.22,0,0.2,
+        /**--------- */
+
+        /**Triangulo da baixo direita */
+        0,-15.3,0,
+        Math.cos(Math.PI/4.5)*2.8,-1.2,Math.sin(Math.PI/4.5)*2.8,
+        0.22,0,-0.2,
+        /**--------- */
+
+        /**Triangulo da baixo esquerda */
+        0.22,0,0.2,
+        -Math.cos(Math.PI/4.5)*-2.8,-1.2,Math.sin(Math.PI/4.5)*-2.8,
+        0,-15.3,0,
+        /**--------- */
+
+        /*Triangulo de tras*/
+        0,-15.3,0,
+        -Math.cos(Math.PI/3.6)*-2.8,-1.2,Math.sin(Math.PI/3.6)*-2.8,
+        0,-1.2,0,
+
+        /*Triangulo de tras*/
         0,-1.2,0,
         Math.cos(Math.PI/3.8)*2.8,-1.2,Math.sin(Math.PI/3.8)*2.8,
         0,-15.3,0,
-
-
     ] );
+    geometry2.addGroup(0,24,0);
+    geometry2.addGroup(24,24,1);
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
     geometry2.setAttribute( 'uv', new THREE.BufferAttribute( vertices2, 3 ));
     geometry2.computeVertexNormals();
     
-    second_origami = new THREE.Mesh( geometry2, material[0] );
+    second_origami = new THREE.Mesh( geometry2, material );
     second_origami.castShadow = true;
     second_origami.receiveShadow = true;
     gorigamis.add(second_origami);
@@ -363,6 +414,123 @@ function createScene() {
         0,0,9.9,
         -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
 
+        -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        0,0,0,
+
+        /**--------- */
+
+        -Math.sin(-Math.PI/8)*-3.35,Math.cos(-Math.PI/8)*-3.35,6.6,
+        0,0,9.9,
+        0,0,0,
+
+        -Math.sin(-Math.PI/8)*-3.35,Math.cos(-Math.PI/8)*-3.35,6.6,
+        -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+        0,0,0,
+
+        /**--------- */
+
+        /**Trapezio do meio */
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        0.5,0,5.25,
+        0,0,0,
+
+        0.5,0,5.25,
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+
+        /**-------- */
+
+        /**Trapezio do meio */
+        -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+        -0.5,0,5.25,
+        0,0,0,
+
+        -Math.sin(-Math.PI/8)*-3.35,Math.cos(-Math.PI/8)*-3.35,6.6,
+        -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+        -0.5,0,5.25,
+
+        /**-------- */
+
+        /**Trapezio de fora */
+        0,0,0,
+        0.5,0,5.25,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+
+        -Math.sin(Math.PI/7)*-2.85,Math.cos(Math.PI/7)*-2.85,4,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+        0.5,0,5.25,
+
+        /**-------- */
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+        -0.5,0,5.25,
+        0,0,0,
+
+        -0.5,0,5.25,
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+        -Math.sin(-Math.PI/7)*-2.85,Math.cos(-Math.PI/7)*-2.85,4,
+
+        /**----------- */
+
+        /** Pescoco */
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+        0,0,0,
+
+        0,6.25,2.25,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+        0,0,0,
+
+        /**-------- */
+
+        0,0,0,
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+
+        0,0,0,
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+        0,6.25,2.25,
+
+        /**Parte de trás do pescoço */
+        0,0,0,
+        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+
+        0,0,0,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+        0,6.25,2.25,
+
+        /**-------- */
+
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
+        0,0,0,
+
+        0,6.25,2.25,
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+        0,0,0,
+
+        /** cabeca */
+        /**------- */
+        0,3.7,0.5,
+        0,6.25,2.25,
+        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+
+        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+        0,6.25,2.25,
+        0,3.7,0.5,
+
+
+        /********************************************* */
+        /*---------------Parte não colorida -----------*/
+        /********************************************* */
+
+
+        /**Trapezio de baixo */
+        -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+        0,0,9.9,
+        0,0,0,
+
         0,0,0,
         -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
         -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
@@ -380,20 +548,20 @@ function createScene() {
         /**--------- */
 
         /**Trapezio do meio */
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        0.5,0,5.25,
         0,0,0,
-        0.5,0,5.25,
-        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
 
-        0.5,0,5.25,
-        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
         -Math.sin(Math.PI/8)*-3.35,Math.cos(Math.PI/8)*-3.35,6.6,
+        -Math.sin(Math.PI/8)*-2.4,Math.cos(Math.PI/8)*-2.4,1.5,
+        0.5,0,5.25,
 
         /**-------- */
 
         /**Trapezio do meio */
-        0,0,0,
-        -0.5,0,5.25,
         -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
+        -0.5,0,5.25,
+        0,0,0,
 
         -0.5,0,5.25,
         -Math.sin(-Math.PI/8)*-2.4,Math.cos(-Math.PI/8)*-2.4,1.5,
@@ -402,9 +570,9 @@ function createScene() {
         /**-------- */
 
         /**Trapezio de fora */
-        0,0,0,
-        0.5,0,5.25,
         -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
+        0.5,0,5.25,
+        0,0,0,
 
         0.5,0,5.25,
         -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
@@ -415,50 +583,29 @@ function createScene() {
         -0.5,0,5.25,
         -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
 
-        -0.5,0,5.25,
-        -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
         -Math.sin(-Math.PI/7)*-2.85,Math.cos(-Math.PI/7)*-2.85,4,
-
-        /**----------- */
-
-        /** Pescoco */
-        0,0,0,
-        -Math.sin(Math.PI/7)*-2.4,Math.cos(Math.PI/7)*-2.4,1.5,
-        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
-
-        0,0,0,
-        Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
-        0,6.25,2.25,
-
-        /**-------- */
-
-        0,0,0,
         -Math.sin(-Math.PI/7)*-2.4,Math.cos(-Math.PI/7)*-2.4,1.5,
-        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
+        -0.5,0,5.25,
 
-        0,0,0,
-        Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
-        0,6.25,2.25,
 
         /** cabeca */
         /**------- */
-        0,3.7,0.5,
-        0,6.25,2.25,
         Math.sin(Math.PI/20)*2.9,5.8,Math.cos(Math.PI/20)*2.9,
+        0,6.25,2.25,
+        0,3.7,0.5,
 
         0,3.7,0.5,
         0,6.25,2.25,
         Math.sin(-Math.PI/20)*2.9,5.8,Math.cos(-Math.PI/20)*2.9,
 
-
-
-
     ] );
+    geometry3.addGroup(0,66,0);
+    geometry3.addGroup(66,42,1);
     geometry3.setAttribute( 'position', new THREE.BufferAttribute( vertices3, 3 ) );
     geometry3.setAttribute( 'uv', new THREE.BufferAttribute( vertices3, 3 ));
     geometry3.computeVertexNormals();
     
-    third_origami = new THREE.Mesh( geometry3, material[0] );
+    third_origami = new THREE.Mesh( geometry3, material );
     third_origami.position.set(12,-9,0);
     third_origami.castShadow = true;
     third_origami.receiveShadow = true;
