@@ -640,10 +640,14 @@ function onKeyDown(e) {
     
     switch (e.keyCode) {
     case 49: //1
+        if(isPause == true)
+            break;
         isFixedPerspCamera = true;
         isFrontalCamera = false;
         break;
     case 50: //2
+        if(isPause == true)
+            break;
         isFrontalCamera = true;
         isFixedPerspCamera = false;
         break;
@@ -660,7 +664,8 @@ function onKeyDown(e) {
         left2 = true;
         break;
     case 51://3
-        reset();
+        if(isPause == true)
+            reset();
         break;
     case 82: //R
     case 114: //r
@@ -676,6 +681,8 @@ function onKeyDown(e) {
         break;
     case 68: //D
     case 100: //d
+        if(isPause == true)
+            break;
         if(light == false)
             light = true;
         else
@@ -683,6 +690,8 @@ function onKeyDown(e) {
         break;
     case 90: //Z
     case 122: //z
+        if(isPause == true)
+            break;
         if(lightH1 == false)
             lightH1 = true;
         else
@@ -690,6 +699,8 @@ function onKeyDown(e) {
         break;
     case 88: //X
     case 120: //x
+        if(isPause == true)
+            break;    
         if(lightH2 == false)
             lightH2 = true;
         else
@@ -697,6 +708,8 @@ function onKeyDown(e) {
         break;
     case 67: //C
     case 99: //c
+        if(isPause == true)
+            break;
         if(lightH3 == false)
             lightH3 = true;
         else
@@ -712,6 +725,8 @@ function onKeyDown(e) {
         break;
     case 83: //S
     case 115: //s
+        if(isPause == true)
+            break;
         if(isBasicMaterial == false){
             isBasicMaterial = true;
         }
@@ -721,6 +736,8 @@ function onKeyDown(e) {
         break;
     case 65: //A
     case 97: //a
+        if(isPause == true)
+            break;
         if(isLambertMaterial == true){
             isLambertMaterial = false;
         }
@@ -932,7 +949,6 @@ function init() {
 
 function update(){
     
-
     lights();
     if(isPause){
         gpause.scale.set(0.5,0.5,0.5);
