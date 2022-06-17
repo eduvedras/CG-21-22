@@ -37,8 +37,7 @@ function spotlight(x,y,z,origami){
     const radius = 1;  // ui: radius
     const widthSegments = 12;  // ui: widthSegments
     const heightSegments = 8;  // ui: heightSegments
-    
-    //var materialS = new THREE.MeshPhongMaterial({ color: 0xffffc2});
+ 
     var geometryS = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
     var meshS = new THREE.Mesh(geometryS, materialS);
     spotList.push(meshS);
@@ -69,7 +68,6 @@ function spotlight(x,y,z,origami){
 
     Hlight.position.set(x,y+2,z - 2);
     
-    //Hlight.target = origami;
     Hlight.target.position.set(origami.position.x, 11, origami.position.z);
     Hlight.target.updateMatrixWorld();
 
@@ -98,9 +96,6 @@ function createPauseScene(){
     var pauseLoader = new THREE.TextureLoader();
     pauseLoader.load(pauseTextureUrl,onLoadMaterial);
     gpause = new THREE.Mesh(geometry, pauseMaterial);
-    //gpause.visible = false;
-
-    //pausescene.add(scene);
     pausescene.add(gpause);
 
 }
@@ -121,15 +116,12 @@ function createScene() {
 
     materialCList = [new THREE.MeshPhongMaterial({    
                             color: "brown",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),
                     new THREE.MeshLambertMaterial({
                             color: "brown",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide,}),
                     new THREE.MeshBasicMaterial({
                             color: "brown",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),    
     ]
 
@@ -137,40 +129,16 @@ function createScene() {
 
     materialSList = [new THREE.MeshPhongMaterial({    
                             color: "yellow",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),
                     new THREE.MeshLambertMaterial({
                             color: "yellow",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide,}),
                     new THREE.MeshBasicMaterial({
                             color: "yellow",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
                             side: THREE.DoubleSide, }),
     ]
 
     materialS = materialSList[0];
-
-    //Aqui temos q inserir o objeto de pausa
-    /*geometry = new THREE.PlaneGeometry(width/4, height/4);
-
-    var pauseTextureUrl = "https://cld.pt/dl/download/dc42ff37-1e80-4535-aecb-1f2980cb894a/Group%2020.png";
-    pauseMaterial = new THREE.MeshBasicMaterial();
-
-    var onLoadMaterial = function (texture){
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(1,1);
-        pauseMaterial.map = texture;
-        pauseMaterial.needsUpdate = true;
-    }
-    
-    var pauseLoader = new THREE.TextureLoader();
-    pauseLoader.load(pauseTextureUrl,onLoadMaterial);
-    gpause = new THREE.Mesh(geometry, pauseMaterial);
-    gpause.visible = false;
-
-    gf.add(gpause);*/
 
     createCube(0,0,0,20,30,30,gcubes);
     createCube(0,-5,20,20,20,10,gcubes);
@@ -179,56 +147,39 @@ function createScene() {
     gcubes.position.set(0,-15,0);
 
     gcubes.scale.set(2,1,1);
-    /**
-     * Acho que para fazermos os origamis é suposto usarmos esta bufferGeometry 
-     * (é aquela malha de triangulos que eles falam)
-     */
+    
     geometry = new THREE.BufferGeometry();
-
-    //const texture = new THREE.TextureLoader();
-    //const p1 = texture.load("js/padrao2.jpg"); 
     
     /**
      * padrão 1: https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png
-     * padrão 2: https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg
-     * padrão 3: https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg
      */
 
     basicmaterialList = [new THREE.MeshPhongMaterial({    
                             color: "white",
-                            //side: THREE.DoubleSide, 
                         }),
                     new THREE.MeshLambertMaterial({
-                            color: "white",
-                            //side: THREE.DoubleSide, 
+                            color: "white", 
                         }),
                     new THREE.MeshBasicMaterial({
                             color: "white",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
-                            //side: THREE.DoubleSide, 
                         }),
                     ]
     
     materialList = [new THREE.MeshPhongMaterial({    
                             color: "white",
-                            //side: THREE.DoubleSide, 
                         }),
                     new THREE.MeshLambertMaterial({
                             color: "white",
-                            //side: THREE.DoubleSide, 
                         }),
                     new THREE.MeshBasicMaterial({
                             color: "white",
-                            //map: new THREE.TextureLoader().load("https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png"),
-                            //side: THREE.DoubleSide, 
                         }),
                 ]
     
     var url1 = "https://cld.pt/dl/download/79429ddb-9e8f-497e-82f8-6bbeeed8cd8c/padrao1.png";
-    var url2 = "https://cld.pt/dl/download/7158693d-c818-4eac-b18a-c6fd9913c5d0/padrao2.jpg";
-    var url3 = "https://cld.pt/dl/download/54b8cffb-b1d2-4017-8092-c6749c741f3c/padrao3.jpg";
     material[0] = materialList[0];
     material[1] = basicmaterialList[0];
+
     var onLoad1 = function (texture){
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
@@ -244,15 +195,6 @@ function createScene() {
     var loader1 = new THREE.TextureLoader();
     loader1.load(url1,onLoad1);
 
-    //material = new THREE.MeshBasicMaterial({ color: 0xfa0e00});
-
-    /**
-     * Isto vão ser os vertices dos triangulos que vamos criar.
-     * Os vértices tem de ser postos no array em sentido anti-horário
-     * para a face que queremos criar aparecer, se quisermos por exemplo ver
-     * um triangulo de trás e de frente, temos de criar dois triangulos e meter
-     * os vertices no array em ordem contrária
-     */
     var vertices = new Float32Array( [
         /**Triangulo da direita */
         0,-10,0,
@@ -309,7 +251,6 @@ function createScene() {
         /**--------- */
 
         /**Triangulo da meio direita */
-        //0,0,0,
         0,-15.3,0,
         Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
         0.22,0,-0.2,
@@ -322,26 +263,26 @@ function createScene() {
         /**--------- */
 
         /**Triangulo da baixo direita */
-        0.22,0,-0.2,
-        Math.cos(Math.PI/4.5)*2.8,-1.2,Math.sin(Math.PI/4.5)*2.8,
+        0.4,0,0,
+        Math.cos(Math.PI/4)*2.9,-1.2,Math.sin(Math.PI/4)*2.9,
         0,-15.3,0,
         /**--------- */
 
         /**Triangulo da baixo esquerda */
         0,-15.3,0,
-        -Math.cos(Math.PI/4.5)*-2.8,-1.2,Math.sin(Math.PI/4.5)*-2.8,
-        0.22,0,0.2,
+        -Math.cos(Math.PI/4)*-2.9,-1.2,Math.sin(Math.PI/4)*-2.9,
+        0.4,0,0,
         /**--------- */
 
         /*Triangulo de tras*/
-        0,-1.2,0,
-        -Math.cos(Math.PI/3.6)*-2.8,-1.2,Math.sin(Math.PI/3.6)*-2.8,
+        0,-1.2,-0.1,
+        -Math.cos(Math.PI/4)*-2.9,-1.2,Math.sin(Math.PI/4)*-2.9,
         0,-15.3,0,
 
         /*Triangulo de tras*/
         0,-15.3,0,
-        Math.cos(Math.PI/3.8)*2.8,-1.2,Math.sin(Math.PI/3.8)*2.8,
-        0,-1.2,0,
+        Math.cos(Math.PI/4)*2.9,-1.2,Math.sin(Math.PI/4)*2.9,
+        0,-1.2,0.1,
 
         /************************************************ */
         /*----------------Parte não colorida------------- */
@@ -360,7 +301,6 @@ function createScene() {
         /**--------- */
 
         /**Triangulo da meio direita */
-        //0,0,0,
         0.22,0,-0.2,
         Math.cos(Math.PI/4)*3.3,1.4,Math.sin(Math.PI/4)*3.3,
         0,-15.3,0,
@@ -372,30 +312,9 @@ function createScene() {
         0.22,0,0.2,
         /**--------- */
 
-        /**Triangulo da baixo direita */
-        0,-15.3,0,
-        Math.cos(Math.PI/4.5)*2.8,-1.2,Math.sin(Math.PI/4.5)*2.8,
-        0.22,0,-0.2,
-        /**--------- */
-
-        /**Triangulo da baixo esquerda */
-        0.22,0,0.2,
-        -Math.cos(Math.PI/4.5)*-2.8,-1.2,Math.sin(Math.PI/4.5)*-2.8,
-        0,-15.3,0,
-        /**--------- */
-
-        /*Triangulo de tras*/
-        0,-15.3,0,
-        -Math.cos(Math.PI/3.6)*-2.8,-1.2,Math.sin(Math.PI/3.6)*-2.8,
-        0,-1.2,0,
-
-        /*Triangulo de tras*/
-        0,-1.2,0,
-        Math.cos(Math.PI/3.8)*2.8,-1.2,Math.sin(Math.PI/3.8)*2.8,
-        0,-15.3,0,
     ] );
     geometry2.addGroup(0,24,0);
-    geometry2.addGroup(24,24,1);
+    geometry2.addGroup(24,12,1);
     geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices2, 3 ) );
     geometry2.setAttribute( 'uv', new THREE.BufferAttribute( vertices2, 3 ));
     geometry2.computeVertexNormals();
@@ -643,22 +562,7 @@ function createScene() {
     directionalLight.shadow.mapSize.width = 1000;
     directionalLight.shadow.mapSize.height = 1000;
 
-    var directionHelper = new THREE.DirectionalLightHelper(directionalLight,3);
     scene.add(directionalLight);
-    //scene.add(directionHelper);
-    var directionHelper1 = new THREE.DirectionalLightHelper(spotLight1,3);
-    //scene.add(directionHelper1);
-    var directionHelper2 = new THREE.SpotLightHelper(spotLight2,3);
-    //scene.add(directionHelper2);
-    var helperS = new THREE.CameraHelper( directionalLight.shadow.camera );
-    //scene.add( helperS );
-    var helperS1 = new THREE.CameraHelper( spotLight1.shadow.camera );
-    //scene.add( helperS1 );
-    var helperS2 = new THREE.CameraHelper( spotLight2.shadow.camera );
-    scene.add( helperS2 );
-
-
-
 }
 
 function createCamera() {
@@ -667,9 +571,9 @@ function createCamera() {
                                             window.innerWidth / window.innerHeight,
                                             1,
                                             1000);
-    FixedPerspCamera.position.x = 30;
-    FixedPerspCamera.position.y = 30;
-    FixedPerspCamera.position.z = 30;
+    FixedPerspCamera.position.x = 20;
+    FixedPerspCamera.position.y = 20;
+    FixedPerspCamera.position.z = 20;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
@@ -801,11 +705,9 @@ function onKeyDown(e) {
     case 32: //Space
         if(isPause == false){
             isPause = true;
-            //gpause.visible = true;
         }
         else{
             isPause = false;
-            //gpause.visible = false;
         }
         break;
     case 83: //S
@@ -955,8 +857,8 @@ function lights(){
         materialS = materialSList[0];
     }
     first_origami.material = material;
-    //second_origami.material = material;
-    //third_origami.material = material;
+    second_origami.material = material;
+    third_origami.material = material;
     for(var i = 0; i < cubeList.length; i++){
        cubeList[i].material = materialC;
     }
@@ -973,8 +875,6 @@ function reset(){
     lightH2 = true;
     lightH3 = true;
     light = true;
-    //gpause.visible = false;
-    //pause = false;
     isLambertMaterial = false;
     isBasicMaterial = false;
     material[0] = materialList[0];
