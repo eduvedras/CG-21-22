@@ -571,9 +571,9 @@ function createCamera() {
                                             window.innerWidth / window.innerHeight,
                                             1,
                                             1000);
-    FixedPerspCamera.position.x = 20;
-    FixedPerspCamera.position.y = 20;
-    FixedPerspCamera.position.z = 20;
+    FixedPerspCamera.position.x = 30;
+    FixedPerspCamera.position.y = 30;
+    FixedPerspCamera.position.z = 30;
     FixedPerspCamera.lookAt(scene.position);
 
     var aspectRatio = window.innerWidth/window.innerHeight;
